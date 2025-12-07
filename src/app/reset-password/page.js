@@ -51,8 +51,8 @@ function ResetPasswordContent() {
         return (
             <div className="card text-center p-8">
                 <div className="text-red-400 mb-4">Invalid Link</div>
-                <p className="text-gray-400 mb-6">This password reset link is invalid or missing the token.</p>
-                <Link href="/forgot-password" className="btn btn-primary inline-flex">
+                <p className="text-[#9aa4b2] mb-6">This password reset link is invalid or missing the token.</p>
+                <Link href="/forgot-password" className="bg-[#06b6d4] text-[#042028] font-bold py-3 px-6 rounded-xl hover:opacity-90 inline-flex transition-all">
                     Request new link
                 </Link>
             </div>
@@ -70,9 +70,9 @@ function ResetPasswordContent() {
                     )}
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-300">New Password</label>
+                        <label className="text-sm font-medium text-[#9aa4b2]">New Password</label>
                         <div className="relative">
-                            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9aa4b2]" />
                             <input
                                 type="password"
                                 required
@@ -85,9 +85,9 @@ function ResetPasswordContent() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-300">Confirm Password</label>
+                        <label className="text-sm font-medium text-[#9aa4b2]">Confirm Password</label>
                         <div className="relative">
-                            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9aa4b2]" />
                             <input
                                 type="password"
                                 required
@@ -102,10 +102,10 @@ function ResetPasswordContent() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="btn btn-primary w-full group"
+                        className="w-full bg-[#06b6d4] text-[#042028] font-bold py-3 rounded-xl transition-all hover:opacity-90 group"
                     >
                         {loading ? 'Reseting...' : 'Reset Password'}
-                        <FiArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        <FiArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform inline ml-2" />
                     </button>
                 </form>
             ) : (
@@ -114,10 +114,10 @@ function ResetPasswordContent() {
                         <FiCheck className="w-8 h-8" />
                     </div>
                     <h2 className="text-xl font-bold mb-2">Password Reset!</h2>
-                    <p className="text-gray-400 text-sm mb-6">
+                    <p className="text-[#9aa4b2] text-sm mb-6">
                         Your password has been successfully reset. Redirecting to login...
                     </p>
-                    <Link href="/login" className="btn btn-primary full-width">
+                    <Link href="/login" className="w-full bg-[#06b6d4] text-[#042028] font-bold py-3 rounded-xl transition-all hover:opacity-90 block">
                         Login Now
                     </Link>
                 </div>
@@ -130,8 +130,8 @@ export default function ResetPasswordPage() {
     return (
         <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
             <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#7c3aed]/10 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#06b6d4]/10 rounded-full blur-3xl"></div>
             </div>
 
             <motion.div

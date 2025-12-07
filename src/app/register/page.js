@@ -43,9 +43,17 @@ export default function RegisterPage() {
                 email: formData.email,
                 password: formData.password,
             });
-            localStorage.setItem('accessToken', response.data.accessToken);
-            localStorage.setItem('refreshToken', response.data.refreshToken);
-            localStorage.setItem('user', JSON.stringify(response.data.user));
+
+            if (response.data.requireVerification) {
+                // Redirect to login with a success message
+                router.push('/login?registered=true');
+            } else {
+                // Fallback for old flow if ever needed
+                localStorage.setItem('accessToken', response.data.accessToken);
+                localStorage.setItem('refreshToken', response.data.refreshToken);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+                router.push('/dashboard');
+            }
         } catch (err) {
             setError(err.response?.data?.error || 'Registration failed. Please try again.');
         } finally {
@@ -65,8 +73,8 @@ export default function RegisterPage() {
         <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
             {/* Background Elements */}
             <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-0 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+                <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#7c3aed]/10 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-[#06b6d4]/10 rounded-full blur-3xl"></div>
             </div>
 
             <motion.div
@@ -130,7 +138,7 @@ export default function RegisterPage() {
                                 minLength={6}
                                 placeholder="••••••••"
                             />
-                            <p className="text-xs text-gray-500 mt-1.5">
+                            <p className="text-xs text-[#9aa4b2] mt-1.5">
                                 Minimum 6 characters
                             </p>
                         </div>
@@ -151,30 +159,30 @@ export default function RegisterPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="btn btn-primary w-full relative"
+                            className="w-full bg-[#06b6d4] text-[#042028] font-bold py-3 rounded-xl transition-all hover:opacity-90 relative"
                         >
                             <span className="relative z-10">
                                 {loading ? t('common.loading') : t('auth.register_button')}
                             </span>
                         </button>
                     </form>
-                    <p className="text-xs text-center text-gray-500 mt-6 leading-relaxed">
+                    <p className="text-xs text-center text-[#9aa4b2] mt-6 leading-relaxed">
                         By registering, you agree to our{' '}
-                        <Link href="/terms" className="text-purple-400 hover:text-purple-300 transition-colors">
+                        <Link href="/terms" className="text-[#06b6d4] hover:text-[#06b6d4]/80 transition-colors">
                             Terms of Service
                         </Link>{' '}
                         and{' '}
-                        <Link href="/privacy" className="text-purple-400 hover:text-purple-300 transition-colors">
+                        <Link href="/privacy" className="text-[#06b6d4] hover:text-[#06b6d4]/80 transition-colors">
                             Privacy Policy
                         </Link>
                     </p>
                     {/* Divider */}
                     <div className="relative my-6">
                         <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-700"></div>
+                            <div className="w-full border-t border-[rgba(255,255,255,0.03)]"></div>
                         </div>
                         <div className="relative flex justify-center text-sm">
-                            <span className="px-4 bg-[rgba(26,26,46,0.6)] text-gray-400">
+                            <span className="px-4 bg-[#0b1220] text-[#9aa4b2]">
                                 {t('auth.or')}
                             </span>
                         </div>
@@ -183,7 +191,7 @@ export default function RegisterPage() {
                     <div className="space-y-3 mt-6">
                         <button
                             onClick={() => handleOAuthSignIn('google')}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm font-medium"
+                            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.06)] transition-all text-sm font-medium"
                         >
                             <FaGoogle />
                             Continue with Google
@@ -191,16 +199,16 @@ export default function RegisterPage() {
 
                         <button
                             onClick={() => handleOAuthSignIn('facebook')}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm font-medium"
+                            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.06)] transition-all text-sm font-medium"
                         >
                             <FaFacebook />
                             Continue with Facebook
                         </button>
-                    </div>                    
+                    </div>
                 </div>
-                <p className="text-sm text-center m-2 text-gray-400">
+                <p className="text-sm text-center m-2 text-[#9aa4b2]">
                     {t('auth.have_account')}{' '}
-                    <Link href="/login" className="text-purple-400 hover:text-purple-300 transition-colors font-medium">
+                    <Link href="/login" className="text-[#06b6d4] hover:text-[#06b6d4]/80 transition-colors font-medium">
                         {t('auth.sign_in')}
                     </Link>
                 </p>

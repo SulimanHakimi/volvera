@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import { signToken } from '@/utils/jwt';
+import { sendVerificationEmail } from '@/utils/email';
 
 export async function POST(req) {
     try {
@@ -31,27 +32,20 @@ export async function POST(req) {
 
         await user.save();
 
-        const accessToken = signToken({
-            id: user._id,
-            email: user.email,
-            role: user.role
-        }, '15m'); // Access token 15 min
+        const verificationToken = user.generateVerificationToken();
+        await user.save();
 
-        const refreshToken = signToken({
-            id: user._id
-        }, '7d'); // Refresh token 7 days
+        // Send verification email
+        try {
+            await sendVerificationEmail(user.email, user.name, verificationToken);
+        } catch (emailError) {
+            console.error('Failed to send verification email:', emailError);
+            // Optionally, we could rollback user creation here, or just let them resend verification later
+        }
 
         return NextResponse.json({
-            message: 'Registration successful',
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                avatar: user.avatar
-            },
-            accessToken,
-            refreshToken
+            message: 'Registration successful. Please check your email to verify your account.',
+            requireVerification: true
         }, { status: 201 });
 
     } catch (error) {

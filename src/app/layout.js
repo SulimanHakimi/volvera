@@ -1,8 +1,10 @@
 import { Inter } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import AuthProvider from "@/components/providers/AuthProvider";
 import Header from "@/components/layout/Header";
+import ScrollToTop from "./ScrollToTop";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,8 +29,11 @@ export default function RootLayout({ children }) {
       <body className={inter.className} suppressHydrationWarning>
         <AuthProvider>
           <LanguageProvider>
+            <Suspense fallback={null}>
+              <ScrollToTop />
+            </Suspense>
             <Header />
-            <main className="mt-20">
+            <main className="">
               {children}
             </main>
           </LanguageProvider>

@@ -3,22 +3,36 @@
 @tailwind utilities;
 
 /* CSS Variables for Dark Theme */
+/* CSS Variables for Dark Theme */
 :root {
-  --bg: #0a0a0f;
-  --card: #1a1a2e;
-  --card-hover: #252538;
-  --accent: #667eea;
-  --accent-hover: #764ba2;
-  --text: #ffffff;
-  --text-secondary: #b4b4c8;
-  --border: #2d2d44;
+  --bg: #0f1724;
+  --card: #0b1220;
+  --card-hover: #111827;
+  --accent: #06b6d4;
+  --accent-hover: #0891b2;
+  /* derived slightly darker than accent */
+  --logo-gradient: #7c3aed;
+  --muted: #9aa4b2;
+  --glass: rgba(255, 255, 255, 0.03);
+  --card-gradient-top: rgba(255, 255, 255, 0.02);
+  --card-gradient-bottom: rgba(255, 255, 255, 0.01);
+  --card-shadow: rgba(2, 8, 23, 0.6);
+  --card-border: rgba(255, 255, 255, 0.03);
+  --badge-gradient-start: #082a2f;
+  --badge-gradient-end: #053b46;
+  --text: #e6eef6;
+  --btn-text: #042028;
+
+  /* Retain specific functional colors if not overridden or map them closer to brand */
+  --text-secondary: #9aa4b2;
+  --border: rgba(255, 255, 255, 0.03);
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--accent) 0%, var(--logo-gradient) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--logo-gradient) 0%, var(--accent) 100%);
 }
 
 /* Base Styles */
@@ -83,21 +97,21 @@ section {
 
 /* Card Styles - Modern UI - Tighter padding */
 .card {
-  background: rgba(26, 26, 46, 0.6);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%), var(--card);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 12px;
   padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(2, 8, 23, 0.6);
 }
 
 .card:hover {
-  background: rgba(37, 37, 56, 0.7);
+  background: var(--card-hover);
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  border-color: rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 16px rgba(2, 8, 23, 0.8);
+  border-color: rgba(6, 182, 212, 0.3);
 }
 
 /* Button Styles - Modern UI */
@@ -136,9 +150,9 @@ section {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  background: var(--accent);
+  color: var(--btn-text);
+  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
 }
 
 .btn-primary:active {
@@ -147,7 +161,8 @@ section {
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+  background: var(--accent-hover);
+  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
 }
 
 .btn-secondary {

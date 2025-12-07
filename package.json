@@ -9,10 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
     "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "express-rate-limit": "^8.2.1",
+    "file-type": "^21.1.1",
     "framer-motion": "^12.23.25",
     "i18next": "^25.7.1",
     "joi": "^18.0.2",

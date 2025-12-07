@@ -1,0 +1,545 @@
+═══════════════════════════════════════════════════════════════════════════════
+
+                        INDEPENDENT CONTRACTOR AGREEMENT
+                              For Content Creators
+
+═══════════════════════════════════════════════════════════════════════════════
+
+BETWEEN:
+
+COMPANY:
+    Name: VOLVERA
+    Swedish Registration No.: [XXXXXX-XXXX]
+    Registered Address: [Company Address, City, Postal Code, Sweden]
+    Email: contracts@volvera.com
+    ("Company" or "VOLVERA")
+
+AND
+
+CONTRACTOR:
+    Full Name: _________________________________
+    Date of Birth: _________________________________
+    Identification: _________________________________ (Passport/National ID Number)
+    Country of Residence: _________________________________
+    Residential Address: _________________________________
+    Email Address: _________________________________
+    Phone Number: _________________________________
+    ("Contractor" or "Creator")
+
+EFFECTIVE DATE: _________________________________
+
+═══════════════════════════════════════════════════════════════════════════════
+
+                                TABLE OF CONTENTS
+
+1.  Purpose of Agreement
+2.  Channel Ownership and Intellectual Property Rights
+3.  Contractor Obligations and Creative Freedom
+4.  Company Obligations and Services
+5.  Revenue Model and Payment Terms
+6.  Tax Responsibilities
+7.  Access Rights and Channel Controls
+8.  Right to Terminate
+9.  Non-Interference Clause
+10. Independent Contractor Status
+11. Confidentiality and Data Protection
+12. Dispute Resolution and Governing Law
+13. Miscellaneous Provisions
+14. Entire Agreement
+15. Signatures
+
+═══════════════════════════════════════════════════════════════════════════════
+
+1. PURPOSE OF AGREEMENT
+
+1.1. The Contractor owns and operates one or more YouTube channels, social media accounts,
+     or other digital content platforms (collectively "Channels") and wishes to receive
+     administrative, monetization, training, and operational support from the Company.
+
+1.2. The Contractor remains the sole creator of all content, retains full ownership of all
+     Channels, and retains the absolute right to discontinue this Agreement at any time
+     without penalty or restriction.
+
+1.3. This Agreement establishes a non-exclusive, independent contractor relationship for
+     the purpose of revenue optimization and administrative support only.
+
+───────────────────────────────────────────────────────────────────────────────
+
+2. CHANNEL OWNERSHIP AND INTELLECTUAL PROPERTY RIGHTS
+
+2.1. CHANNEL OWNERSHIP
+     The Contractor is and shall remain the sole lawful owner of the following Channels:
+
+     Channel 1:
+     Platform: _________________________________ (e.g., YouTube, Instagram, TikTok)
+     Channel Name: _________________________________
+     Channel URL: _________________________________
+     Subscriber/Follower Count: _________________________________
+
+     Channel 2:
+     Platform: _________________________________
+     Channel Name: _________________________________
+     Channel URL: _________________________________
+     Subscriber/Follower Count: _________________________________
+
+     Channel 3:
+     Platform: _________________________________
+     Channel Name: _________________________________
+     Channel URL: _________________________________
+     Subscriber/Follower Count: _________________________________
+
+     (Attach Schedule A for additional channels)
+
+2.2. NO TRANSFER OF OWNERSHIP
+     Nothing in this Agreement transfers, assigns, or conveys any ownership, intellectual
+     property rights, publishing rights, distribution rights, or any other proprietary
+     rights to the Company.
+
+2.3. CONTENT RIGHTS
+     The Company does not claim, and shall never claim, any rights, title, or interest in:
+     a. Content created, published, stored, or distributed through the Channels
+     b. Trademarks, logos, or brand elements associated with the Channels
+     c. Subscriber/follower relationships or audience data
+     d. Future content or derivative works
+
+2.4. CONTRACTOR RETAINS ALL RIGHTS
+     The Contractor retains 100% ownership and control over:
+     a. Channel login credentials and administrator access
+     b. All content (past, present, and future)
+     c. Channel monetization settings
+     d. Brand partnerships and sponsorship agreements
+     e. Merchandise and affiliate marketing rights
+
+───────────────────────────────────────────────────────────────────────────────
+
+3. CONTRACTOR OBLIGATIONS AND CREATIVE FREEDOM
+
+3.1. SOLE RESPONSIBILITY
+     The Contractor is solely and exclusively responsible for:
+     a. Content creation, ideation, and production
+     b. Publishing schedules and frequency
+     c. Editorial decisions and creative direction
+     d. Copyright compliance and licensing
+     e. Compliance with platform Terms of Service (YouTube, Instagram, TikTok, etc.)
+     f. Community management and audience engagement
+     g. Brand safety and advertiser-friendly content guidelines
+
+3.2. CREATIVE INDEPENDENCE
+     The Contractor independently chooses and controls:
+     a. Content topics, themes, and subject matter
+     b. Video/post formats, styles, and production quality
+     c. Languages and target audiences
+     d. Publication schedules and upload frequency
+     e. Collaborations and guest appearances
+     f. Monetization strategies (ads, memberships, super chats, etc.)
+
+3.3. NO MINIMUM REQUIREMENTS
+     The Contractor is NOT required to:
+     a. Produce a minimum number of videos/posts
+     b. Maintain a specific upload schedule
+     c. Achieve specific performance metrics
+     d. Follow Company content guidelines or editorial direction
+
+───────────────────────────────────────────────────────────────────────────────
+
+4. COMPANY OBLIGATIONS AND SERVICES
+
+4.1. ADMINISTRATIVE SUPPORT
+     The Company shall provide the following services:
+     a. Monetization management through advertising revenue systems
+     b. Revenue tracking and financial reporting for each Channel
+     c. Timely distribution of Contractor revenue share
+     d. Access to analytics dashboards and performance reports
+     e. Administrative support related to monetization optimization
+     f. Payment processing and international transfer facilitation
+     g. Optional training resources and growth strategy consultation
+
+4.2. NON-CONTROL COMMITMENT
+     The Company shall NOT:
+     a. Control, influence, or restrict content decisions
+     b. Require specific content types or topics
+     c. Impose editorial guidelines or censorship
+     d. Demand minimum performance metrics
+     e. Interfere with creative freedom
+
+4.3. TRANSPARENCY OBLIGATION
+     The Company commits to full transparency regarding:
+     a. Revenue received from platforms
+     b. Administrative fees deducted
+     c. Payment processing timelines
+     d. Any changes to revenue models or fee structures
+
+───────────────────────────────────────────────────────────────────────────────
+
+5. REVENUE MODEL AND PAYMENT TERMS
+
+5.1. REVENUE ALLOCATION
+     All revenue generated by or paid to the Channels listed in Section 2 through YouTube
+     AdSense, platform monetization, or affiliated advertising systems shall be allocated
+     as follows:
+
+     ● Contractor Share: 99.5% (ninety-nine point five percent)
+     ● Company Administrative Fee: 0.5% (zero point five percent)
+
+5.2. REVENUE DEFINITION
+     "Revenue" includes all income from:
+     a. YouTube AdSense advertising
+     b. YouTube Premium revenue share
+     c. Platform-provided monetization features
+     d. Any other platform-distributed advertising revenue
+
+     "Revenue" EXCLUDES:
+     a. Direct sponsorships negotiated by Contractor
+     b. Affiliate marketing commissions
+     c. Merchandise sales
+     d. Super Chats, memberships, or tips (unless otherwise agreed)
+
+5.3. PAYMENT PROCESSING
+     a. The Company receives monthly payouts from YouTube/platforms
+     b. Within 7 (seven) business days of receiving platform payouts, the Company shall
+        calculate and transfer the Contractor's 99.5% share
+     c. Payments shall be made via the Contractor's chosen method:
+        ☐ Bank Transfer (SWIFT/IBAN)
+        ☐ Western Union
+        ☐ Other: _________________________________
+
+5.4. PAYMENT DETAILS
+     Contractor's Payment Information:
+     Bank Name: _________________________________
+     Account Holder Name: _________________________________
+     Account Number/IBAN: _________________________________
+     SWIFT/BIC Code: _________________________________
+     Bank Address: _________________________________
+
+5.5. MONTHLY STATEMENTS
+     The Company shall provide detailed monthly statements showing:
+     a. Gross revenue received from platforms
+     b. Company administrative fee (0.5%)
+     c. Net amount paid to Contractor (99.5%)
+     d. Payment date and transaction reference
+
+5.6. MINIMUM PAYOUT THRESHOLD
+     Payments shall be processed when the Contractor's share reaches a minimum of:
+     [USD $100 / EUR €100 / Other: _________________]
+
+───────────────────────────────────────────────────────────────────────────────
+
+6. TAX RESPONSIBILITIES
+
+6.1. CONTRACTOR TAX OBLIGATIONS
+     The Contractor acknowledges and agrees that they are fully responsible for:
+     a. All tax filings in their country of residence
+     b. Income tax declarations and payments
+     c. Value Added Tax (VAT) or Sales Tax compliance (if applicable)
+     d. Social security contributions (if applicable)
+     e. Any other tax obligations arising from income received
+
+6.2. COMPANY TAX OBLIGATIONS
+     The Company is responsible solely for tax obligations on its administrative fee
+     (0.5% as specified in Section 5.1) in accordance with Swedish tax law.
+
+6.3. GROSS PAYMENTS
+     All payments to the Contractor are GROSS amounts and do NOT include tax withholding.
+     The Contractor must handle all tax obligations independently.
+
+6.4. TAX DOCUMENTATION
+     Upon request, the Company shall provide:
+     a. Annual revenue summaries
+     b. Payment records and transaction history
+     c. Any documentation required for Contractor's tax filings
+
+6.5. NO TAX ADVICE
+     The Company does not provide tax advice. The Contractor is advised to consult with
+     a qualified tax professional in their jurisdiction.
+
+───────────────────────────────────────────────────────────────────────────────
+
+7. ACCESS RIGHTS AND CHANNEL CONTROLS
+
+7.1. CONTRACTOR RETAINS FULL CONTROL
+     The Contractor retains full administrator ownership and primary control of all
+     Channels at all times.
+
+7.2. LIMITED COMPANY ACCESS
+     The Company may be granted LIMITED access ONLY for the following purposes:
+     a. Analytics review and performance monitoring
+     b. Monetization configuration and optimization
+     c. Brand safety review and advertiser compliance
+     d. Technical troubleshooting related to monetization
+
+7.3. ACCESS RESTRICTIONS
+     The Company shall NOT have access to:
+     a. Channel login credentials (username/password)
+     b. Email account associated with the Channel
+     c. Content upload or publishing capabilities
+     d. Community post creation or comment moderation
+     e. Channel settings or branding modifications
+
+7.4. REVOCATION OF ACCESS
+     The Contractor may revoke Company access at any time, immediately and without cause,
+     by:
+     a. Removing Company user permissions from the Channel
+     b. Notifying the Company via email
+     c. Submitting a Termination Notice (see Section 8)
+
+7.5. EARNED FEES PROTECTION
+     Revocation of access does not nullify the Company's right to collect earned
+     administrative fees (0.5%) for revenue generated up to the date of revocation.
+
+───────────────────────────────────────────────────────────────────────────────
+
+8. RIGHT TO TERMINATE
+
+8.1. IMMEDIATE TERMINATION RIGHT
+     The Contractor may terminate this Agreement IMMEDIATELY, at any time, for any reason
+     or no reason, with NO PENALTY, NO FEES, and NO RESTRICTIONS by:
+     
+     a. Completing and submitting the "Termination Notice Form" available at:
+        [Website URL or email: contracts@volvera.com]
+     b. Sending written notice via email to: contracts@volvera.com
+     c. Revoking Company access to the Channel(s)
+
+8.2. NO NOTICE PERIOD REQUIRED
+     The Contractor is NOT required to provide advance notice. Termination is effective
+     immediately upon submission of the Termination Notice.
+
+8.3. EFFECTS OF TERMINATION
+     Upon termination, the following shall occur immediately:
+     a. Company loses all access rights to the Channel(s)
+     b. Company stops collecting revenue going forward
+     c. All outstanding payments to Contractor must be settled within 14 (fourteen)
+        calendar days
+     d. Channel ownership, control, and all rights remain 100% with the Contractor
+     e. Company shall delete or return any Contractor data in its possession
+
+8.4. NO RESTRICTIONS ON CONTRACTOR
+     The Company shall NOT:
+     a. Restrict or delay channel ownership transfer or access
+     b. Impose penalties, fees, or charges for termination
+     c. Withhold payments or revenue
+     d. Interfere with Channel operations post-termination
+     e. Claim any ongoing rights to content or revenue
+
+8.5. FINAL SETTLEMENT
+     Within 14 days of termination, the Company shall provide:
+     a. Final payment of all earned revenue (99.5% share)
+     b. Final revenue statement showing all calculations
+     c. Confirmation of access removal
+     d. Confirmation of data deletion
+
+───────────────────────────────────────────────────────────────────────────────
+
+9. NON-INTERFERENCE CLAUSE
+
+9.1. PROHIBITED COMPANY ACTIONS
+     The Company shall NOT, under any circumstances:
+     a. Modify, edit, or alter channel content
+     b. Publish, upload, or schedule content without explicit prior approval
+     c. Restrict, influence, or interfere with editorial decisions
+     d. Impose publishing rules, content guidelines, or creative restrictions
+     e. Delete or remove published content
+     f. Respond to comments or engage with the audience on behalf of the Contractor
+     g. Make channel branding or design changes
+
+9.2. CONTRACTOR INDEPENDENCE
+     The Contractor has full, independent, and unrestricted creative and business freedom
+     regarding all aspects of Channel operations.
+
+9.3. ADVISORY ROLE ONLY
+     The Company may provide suggestions, recommendations, or best practices, but the
+     Contractor has sole discretion to accept or reject such advice.
+
+───────────────────────────────────────────────────────────────────────────────
+
+10. INDEPENDENT CONTRACTOR STATUS
+
+10.1. NO EMPLOYMENT RELATIONSHIP
+      Nothing in this Agreement creates, implies, or establishes:
+      a. An employment relationship
+      b. An employer-employee relationship
+      c. Labor-based dependency
+      d. Social benefits or employment benefits
+      e. Working obligations or minimum working time requirements
+      f. Exclusive service obligations
+
+10.2. CONTRACTOR INDEPENDENCE
+      The Contractor is an independent business entity and independently determines:
+      a. Workload volume and intensity
+      b. Work schedule and hours
+      c. Deliverable frequency and timing
+      d. Work methods and processes
+      e. Use of assistants, employees, or subcontractors
+
+10.3. NO EMPLOYEE BENEFITS
+      The Contractor is NOT entitled to:
+      a. Paid vacation or sick leave
+      b. Health insurance or pension contributions
+      c. Unemployment benefits
+      d. Workers' compensation
+      e. Any other employee benefits
+
+10.4. BUSINESS EXPENSES
+      The Contractor is responsible for all business expenses including but not limited to:
+      a. Equipment (cameras, computers, software)
+      b. Internet and utilities
+      c. Production costs
+      d. Travel expenses
+      e. Professional development and training
+
+───────────────────────────────────────────────────────────────────────────────
+
+11. CONFIDENTIALITY AND DATA PROTECTION
+
+11.1. COMPANY CONFIDENTIALITY OBLIGATIONS
+      The Company shall NOT disclose, share, or make public the following information
+      without the Contractor's explicit written permission:
+      a. Earnings data and revenue figures
+      b. Channel analytics and performance metrics
+      c. Contact information (email, phone, address)
+      d. Personal identity information (passport, ID numbers)
+      e. Payment details and banking information
+      f. Any other proprietary or personal information
+
+11.2. DATA PROTECTION
+      The Company commits to:
+      a. Comply with GDPR and applicable data protection laws
+      b. Securely store all Contractor data
+      c. Use data only for purposes specified in this Agreement
+      d. Delete or return data upon termination
+
+11.3. CONTRACTOR RIGHTS
+      The Contractor has the right to:
+      a. Request access to their data held by the Company
+      b. Request correction of inaccurate data
+      c. Request deletion of data (right to be forgotten)
+      d. Object to data processing
+
+───────────────────────────────────────────────────────────────────────────────
+
+12. DISPUTE RESOLUTION AND GOVERNING LAW
+
+12.1. GOOD FAITH NEGOTIATION
+      In the event of any dispute, disagreement, or claim arising from this Agreement,
+      the parties shall first attempt to resolve the matter through good-faith negotiation
+      within 30 (thirty) calendar days.
+
+12.2. MEDIATION
+      If negotiation fails, the parties agree to attempt mediation before pursuing
+      litigation.
+
+12.3. GOVERNING LAW
+      This Agreement shall be governed by and construed in accordance with the laws of
+      Sweden, without regard to its conflict of law provisions.
+
+12.4. JURISDICTION
+      Any legal action or proceeding arising from this Agreement shall be brought
+      exclusively in the courts of Sweden.
+
+12.5. LANGUAGE
+      The official language of this Agreement is English. Any translations are for
+      convenience only, and the English version shall prevail in case of discrepancies.
+
+───────────────────────────────────────────────────────────────────────────────
+
+13. MISCELLANEOUS PROVISIONS
+
+13.1. AMENDMENTS
+      Any amendments or modifications to this Agreement must be made in writing and
+      signed by both parties.
+
+13.2. SEVERABILITY
+      If any provision of this Agreement is found to be invalid or unenforceable, the
+      remaining provisions shall remain in full force and effect.
+
+13.3. WAIVER
+      Failure by either party to enforce any provision of this Agreement shall not
+      constitute a waiver of that provision or any other provision.
+
+13.4. ASSIGNMENT
+      The Contractor may assign this Agreement to any party. The Company may not assign
+      this Agreement without the Contractor's written consent.
+
+13.5. NOTICES
+      All notices under this Agreement shall be sent to:
+      
+      Company: contracts@volvera.com
+      Contractor: _________________________________ (email provided in header)
+
+13.6. FORCE MAJEURE
+      Neither party shall be liable for failure to perform obligations due to circumstances
+      beyond their reasonable control (natural disasters, war, government actions, etc.).
+
+───────────────────────────────────────────────────────────────────────────────
+
+14. ENTIRE AGREEMENT
+
+14.1. This document, together with any attached schedules and the Termination Notice Form,
+      constitutes the entire agreement between the Company and the Contractor.
+
+14.2. This Agreement supersedes all prior negotiations, understandings, agreements,
+      representations, and warranties, whether written or oral.
+
+14.3. No verbal agreements, promises, or representations shall be binding unless
+      incorporated into this written Agreement.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+15. SIGNATURES
+
+BY SIGNING BELOW, BOTH PARTIES ACKNOWLEDGE THAT THEY HAVE READ, UNDERSTOOD, AND AGREE
+TO BE BOUND BY ALL TERMS AND CONDITIONS OF THIS INDEPENDENT CONTRACTOR AGREEMENT.
+
+───────────────────────────────────────────────────────────────────────────────
+
+COMPANY REPRESENTATIVE (VOLVERA)
+
+Signature: _________________________________
+
+Name (printed): _________________________________
+
+Title/Position: _________________________________
+
+Date: _________________________________
+
+Company Stamp/Seal: [                    ]
+
+───────────────────────────────────────────────────────────────────────────────
+
+CONTRACTOR
+
+Signature: _________________________________
+
+Name (printed): _________________________________
+
+Date: _________________________________
+
+Place of Signing: _________________________________
+
+───────────────────────────────────────────────────────────────────────────────
+
+WITNESS (Optional but Recommended)
+
+Signature: _________________________________
+
+Name (printed): _________________________________
+
+Date: _________________________________
+
+═══════════════════════════════════════════════════════════════════════════════
+
+                              DOCUMENT INFORMATION
+
+Document Version: 2.0
+Last Updated: December 2025
+Template ID: VOLVERA-ICA-2025
+Pages: [Total Pages]
+
+For questions or support:
+Email: contracts@volvera.com
+Website: www.volvera.com
+
+═══════════════════════════════════════════════════════════════════════════════
+
+                                  END OF AGREEMENT
+
+═══════════════════════════════════════════════════════════════════════════════

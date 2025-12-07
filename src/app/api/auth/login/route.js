@@ -29,6 +29,13 @@ export async function POST(req) {
             );
         }
 
+        if (!user.isEmailVerified) {
+            return NextResponse.json(
+                { error: 'Please verify your email address before logging in' },
+                { status: 403 }
+            );
+        }
+
         user.lastLogin = new Date();
         await user.save();
 
@@ -36,7 +43,7 @@ export async function POST(req) {
             id: user._id,
             email: user.email,
             role: user.role
-        }, '15m');
+        }, '24h');
 
         const refreshToken = signToken({
             id: user._id

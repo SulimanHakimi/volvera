@@ -8,12 +8,12 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                bg: '#0a0a0f',
-                card: '#1a1a2e',
-                'card-hover': '#252538',
-                accent: '#667eea',
-                'accent-hover': '#764ba2',
-                border: '#2d2d44',
+                bg: '#0f1724',
+                card: '#0b1220',
+                'card-hover': '#111827',
+                accent: '#06b6d4',
+                'accent-hover': '#0891b2',
+                border: 'rgba(255,255,255,0.03)',
             },
         },
     },
