@@ -177,6 +177,80 @@ export default function DashboardPage() {
                         </motion.div>
                     </div>
 
+                    {/* Contract Template Downloads */}
+                    <div className="card p-6 mb-8">
+                        <div className="flex items-start justify-between mb-6">
+                            <div>
+                                <h2 className="text-2xl font-bold mb-2">Independent Contractor Agreement</h2>
+                                <p className="text-gray-400 text-sm">Download the full contract template in your preferred language</p>
+                            </div>
+                            <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20">
+                                <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <a
+                                href="/api/contract-template?lang=en"
+                                target="_blank"
+                                className="group relative overflow-hidden p-6 rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent hover:from-purple-500/10 hover:border-purple-500/30 transition-all"
+                            >
+                                <div className="flex items-center justify-between mb-3">
+                                    <span className="text-2xl">🇬🇧</span>
+                                    <svg className="w-5 h-5 text-gray-400 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+                                <h3 className="font-bold text-lg mb-1">English</h3>
+                                <p className="text-sm text-gray-400">Full agreement template</p>
+                            </a>
+
+                            <a
+                                href="/api/contract-template?lang=fa"
+                                target="_blank"
+                                className="group relative overflow-hidden p-6 rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent hover:from-cyan-500/10 hover:border-cyan-500/30 transition-all"
+                            >
+                                <div className="flex items-center justify-between mb-3">
+                                    <span className="text-2xl">🇮🇷</span>
+                                    <svg className="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+                                <h3 className="font-bold text-lg mb-1">فارسی</h3>
+                                <p className="text-sm text-gray-400">Persian (Farsi)</p>
+                            </a>
+
+                            <a
+                                href="/api/contract-template?lang=ps"
+                                target="_blank"
+                                className="group relative overflow-hidden p-6 rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent hover:from-green-500/10 hover:border-green-500/30 transition-all"
+                            >
+                                <div className="flex items-center justify-between mb-3">
+                                    <span className="text-2xl">🇦🇫</span>
+                                    <svg className="w-5 h-5 text-gray-400 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+                                <h3 className="font-bold text-lg mb-1">پښتو</h3>
+                                <p className="text-sm text-gray-400">Pashto</p>
+                            </a>
+                        </div>
+
+                        <div className="mt-6 p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                            <div className="flex items-start gap-3">
+                                <svg className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div className="text-sm">
+                                    <p className="text-blue-300 font-medium mb-1">Contract Template</p>
+                                    <p className="text-gray-400">This is the standard Independent Contractor Agreement template. Once you create a contract, you'll receive a personalized PDF with your information.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Contracts Section */}
                     <div className="card">
                         <div className="flex items-center justify-between mb-6">
@@ -233,9 +307,43 @@ export default function DashboardPage() {
                                                     {new Date(contract.createdAt).toLocaleDateString()}
                                                 </td>
                                                 <td className="py-4 px-4">
-                                                    <Link href={`/dashboard/contracts/${contract._id}`} className="text-purple-400 hover:text-purple-300 text-sm font-medium transition-colors">
-                                                        View Details
-                                                    </Link>
+                                                    <div className="flex items-center gap-2">
+                                                        <Link href={`/dashboard/contracts/${contract._id}`} className="text-purple-400 hover:text-purple-300 text-sm font-medium transition-colors">
+                                                            View Details
+                                                        </Link>
+                                                        <div className="relative group">
+                                                            <button className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                                </svg>
+                                                            </button>
+                                                            <div className="absolute right-0 mt-2 w-48 bg-[#1a2332] border border-white/10 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                                                                <div className="p-2 space-y-1">
+                                                                    <a
+                                                                        href={`/api/contracts/${contract._id}/pdf?lang=en`}
+                                                                        target="_blank"
+                                                                        className="block px-3 py-2 text-sm hover:bg-white/5 rounded transition-colors"
+                                                                    >
+                                                                        📄 English
+                                                                    </a>
+                                                                    <a
+                                                                        href={`/api/contracts/${contract._id}/pdf?lang=fa`}
+                                                                        target="_blank"
+                                                                        className="block px-3 py-2 text-sm hover:bg-white/5 rounded transition-colors"
+                                                                    >
+                                                                        📄 Persian (فارسی)
+                                                                    </a>
+                                                                    <a
+                                                                        href={`/api/contracts/${contract._id}/pdf?lang=ps`}
+                                                                        target="_blank"
+                                                                        className="block px-3 py-2 text-sm hover:bg-white/5 rounded transition-colors"
+                                                                    >
+                                                                        📄 Pashto (پښتو)
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}

@@ -173,21 +173,35 @@ export default function ContractDetailsPage({ params }) {
 
                         {/* Sidebar / Actions */}
                         <div className="space-y-6">
-                            {contract.pdfGenerated && contract.pdfPath && (
-                                <div className="card p-6">
-                                    <h3 className="font-bold mb-4">{t('dashboard.official_contract')}</h3>
+                            <div className="card p-6">
+                                <h3 className="font-bold mb-4">{t('dashboard.official_contract')}</h3>
+                                <div className="space-y-3">
                                     <a
-                                        href={contract.pdfPath}
-                                        download
-                                        className="btn btn-secondary w-full justify-center flex items-center gap-2 mb-4"
+                                        href={`/api/contracts/${contract._id}/pdf?lang=en`}
+                                        target="_blank"
+                                        className="btn btn-secondary w-full justify-center flex items-center gap-2"
                                     >
-                                        <FiDownload /> Download PDF
+                                        <FiDownload /> Download (English)
                                     </a>
-                                    <p className="text-xs text-gray-400 text-center">
-                                        Generated on {new Date(contract.createdAt).toLocaleDateString()}
-                                    </p>
+                                    <a
+                                        href={`/api/contracts/${contract._id}/pdf?lang=fa`}
+                                        target="_blank"
+                                        className="btn btn-secondary w-full justify-center flex items-center gap-2"
+                                    >
+                                        <FiDownload /> Download (Persian)
+                                    </a>
+                                    <a
+                                        href={`/api/contracts/${contract._id}/pdf?lang=ps`}
+                                        target="_blank"
+                                        className="btn btn-secondary w-full justify-center flex items-center gap-2"
+                                    >
+                                        <FiDownload /> Download (Pashto)
+                                    </a>
                                 </div>
-                            )}
+                                <p className="text-xs text-gray-400 text-center mt-3">
+                                    Generated on {new Date(contract.createdAt).toLocaleDateString()}
+                                </p>
+                            </div>
 
                             {/* Upload Signed Contract (Only for Partnership) */}
                             {isPartnership && (

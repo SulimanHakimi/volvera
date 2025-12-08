@@ -118,7 +118,7 @@ export default function HomePage() {
           >
             <div className="text-accent font-bold mb-3 uppercase tracking-wide text-sm">{t('hero.partnership_tag')}</div>
             <h1 className="text-4xl md:text-[38px] font-bold leading-[1.05] mb-4">
-              {t('hero.title').split('99.5%')[0]}<span className="bg-gradient-to-r from-[var(--accent)] to-[#7c3aed] bg-clip-text transparent">99.5%</span>{t('hero.title').split('99.5%')[1]}
+              {t('hero.title')}
             </h1>
             <p className="text-muted text-lg mb-6 leading-relaxed">
               {t('hero.subtitle')}

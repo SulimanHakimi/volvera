@@ -11,7 +11,7 @@ COMPANY:
     Name: VOLVERA
     Swedish Registration No.: [XXXXXX-XXXX]
     Registered Address: [Company Address, City, Postal Code, Sweden]
-    Email: contracts@volvera.com
+    Email: nor.volvera@gmail.com
     ("Company" or "VOLVERA")
 
 AND
@@ -295,8 +295,8 @@ EFFECTIVE DATE: _________________________________
      or no reason, with NO PENALTY, NO FEES, and NO RESTRICTIONS by:
      
      a. Completing and submitting the "Termination Notice Form" available at:
-        [Website URL or email: contracts@volvera.com]
-     b. Sending written notice via email to: contracts@volvera.com
+        [Website URL or email: nor.volvera@gmail.com]
+     b. Sending written notice via email to: nor.volvera@gmail.com
      c. Revoking Company access to the Channel(s)
 
 8.2. NO NOTICE PERIOD REQUIRED
@@ -462,7 +462,7 @@ EFFECTIVE DATE: _________________________________
 13.5. NOTICES
       All notices under this Agreement shall be sent to:
       
-      Company: contracts@volvera.com
+      Company: nor.volvera@gmail.com
       Contractor: _________________________________ (email provided in header)
 
 13.6. FORCE MAJEURE
@@ -535,7 +535,7 @@ Template ID: VOLVERA-ICA-2025
 Pages: [Total Pages]
 
 For questions or support:
-Email: contracts@volvera.com
+Email: nor.volvera@gmail.com
 Website: www.volvera.com
 
 ═══════════════════════════════════════════════════════════════════════════════

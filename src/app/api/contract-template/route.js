@@ -1,41 +1,15 @@
-// app/api/contracts/[id]/pdf/route.js
+// app/api/contract-template/route.js
 import { NextResponse } from 'next/server';
-import connectDB from '@/lib/mongodb';
-import Contract from '@/models/Contract';
-import { verifyToken, extractTokenFromHeader } from '@/utils/jwt';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import { contractContent } from '@/lib/contractContent';
 
-const authenticate = (request) => {
-    const token = extractTokenFromHeader(request.headers.get('Authorization'));
-    if (!token) return null;
-    return verifyToken(token);
-};
-
-export async function GET(request, { params }) {
+export async function GET(request) {
     try {
-        const decoded = authenticate(request);
-        if (!decoded) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
-        const { id } = await params;
         const { searchParams } = new URL(request.url);
         const lang = searchParams.get('lang') || 'en';
-        console.log('Generating PDF for Contract ID:', id, 'Lang:', lang);
 
-        await connectDB();
-
-        const contract = await Contract.findById(id).populate('user');
-        if (!contract) {
-            return NextResponse.json({ error: `Contract not found` }, { status: 404 });
-        }
-
-        // Ownership check
-        if (contract.user._id.toString() !== decoded.id && decoded.role !== 'admin') {
-            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-        }
+        console.log('Generating template PDF for language:', lang);
 
         // Create PDF
         const pdfDoc = await PDFDocument.create();
@@ -48,11 +22,9 @@ export async function GET(request, { params }) {
         let persianFont;
         let persianBoldFont;
         try {
-            // Regular
             const fontBytes = await fetch('https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSansArabic/NotoSansArabic-Regular.ttf').then(res => res.arrayBuffer());
             persianFont = await pdfDoc.embedFont(fontBytes);
 
-            // Bold (Simulated by using Medium or Bold if available, using Regular for now to be safe or fetching another weight)
             const boldFontBytes = await fetch('https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSansArabic/NotoSansArabic-Bold.ttf').then(res => res.arrayBuffer());
             persianBoldFont = await pdfDoc.embedFont(boldFontBytes);
         } catch (e) {
@@ -68,23 +40,16 @@ export async function GET(request, { params }) {
         const gray = rgb(0.3, 0.3, 0.3);
 
         // Language setup
-        const isRTL = lang === 'fa' || lang === 'ps' || (lang === 'original' && contract.originalLanguage !== 'en');
+        const isRTL = lang === 'fa' || lang === 'ps';
         const usedFont = isRTL ? persianFont : font;
         const usedBoldFont = isRTL ? persianBoldFont : boldFont;
 
         // Content
-        const currentLangCode = (lang === 'original') ? contract.originalLanguage : lang;
-        const txt = contractContent[currentLangCode] || contractContent['en'];
+        const txt = contractContent[lang] || contractContent['en'];
 
         // Helper: Fix Text for RTL
         const fixText = (text) => {
             if (!text) return '';
-            // Very basic RTL reversing if needed, though pdf-lib + fontkit usually needs custom shaping (like via separate lib). 
-            // For complex Arabic scripting with pdf-lib, often a shaping library is needed. 
-            // However, ensuring we just print it might be enough if not perfect. 
-            // NOTE: pdf-lib does NOT support RTL text shaping/layout out of the box. 
-            // We assume basic rendering. Real RTL support often requires 'bidi-js' or similar to reorder logic.
-            // For now, we will rely on standard embedding.
             return text;
         };
 
@@ -131,10 +96,6 @@ export async function GET(request, { params }) {
                     const lineWidth = fontToUse.widthOfTextAtSize(line, size);
                     xPos = (width - lineWidth) / 2;
                 } else if (align === 'right' || isRTL) {
-                    // For RTL simplified alignment (not true bidi)
-                    // If really RTL, we might want to align right visually even if text isn't shaped perfectly
-                    // But usually contract text is justified or left-aligned in western standards.
-                    // In Persian/Pashto documents, right alignment is standard.
                     if (isRTL) {
                         const lineWidth = fontToUse.widthOfTextAtSize(line, size);
                         xPos = width - margin - lineWidth;
@@ -150,7 +111,7 @@ export async function GET(request, { params }) {
                 });
                 y -= (size + 6);
             }
-            y -= 4; // Extra paragraph spacing
+            y -= 4;
         };
 
         // --- RENDER CONTENT ---
@@ -183,25 +144,17 @@ export async function GET(request, { params }) {
 
         // Contractor
         drawWrappedText(txt.contractor.label, 11, usedBoldFont, purple);
-
-        // Use user data
-        const cData = (lang === 'original') ? contract.originalData : contract.translatedData;
-        const fullName = cData?.fullName || contract.originalData?.fullName || '_________________';
-        const emailVal = cData?.email || contract.originalData?.email || '_________________';
-
-        drawWrappedText(fullName, 12, usedBoldFont, black);
-        drawWrappedText(emailVal, 10, usedFont, gray);
+        drawWrappedText('[Your Name]', 12, usedBoldFont, black);
+        drawWrappedText('[Your Email]', 10, usedFont, gray);
         drawWrappedText(txt.contractor.detailsLabel, 10, usedFont, gray);
         y -= 30;
 
         // 3. Sections
         for (const section of txt.sections) {
             checkPageBreak(50);
-            // Section Title
             y -= 10;
             drawWrappedText(section.title, 12, usedBoldFont, purple);
 
-            // Content
             for (const para of section.content) {
                 checkPageBreak(20);
                 drawWrappedText(para, 10, usedFont, black);
@@ -218,12 +171,6 @@ export async function GET(request, { params }) {
         y -= 40;
 
         const sigY = y;
-
-        // Left (Contractor usually, or Company) - Let's follow template
-        // Template: Company Left/Right? Actually template had Company then Contractor. 
-        // Let's do side by side or vertical if no space. 
-        // Side by side is standard.
-
         const leftX = margin;
         const rightX = width / 2 + 20;
 
@@ -235,22 +182,18 @@ export async function GET(request, { params }) {
         page.drawLine({ start: { x: rightX, y: sigY }, end: { x: rightX + 200, y: sigY }, thickness: 1, color: black });
         page.drawText(fixText(txt.signatures.contractor), { x: rightX, y: sigY - 15, size: 9, font: usedBoldFont, color: black });
 
-        // Draw contract ID at bottom of every page? Or just this one.
-        y = 30;
-        page.drawText(`Contract ID: ${contract.contractNumber || id}`, { x: margin, y, size: 8, font: usedFont, color: gray });
-
         const pdfBytes = await pdfDoc.save();
 
         return new NextResponse(pdfBytes, {
             status: 200,
             headers: {
                 'Content-Type': 'application/pdf',
-                'Content-Disposition': `attachment; filename="VOLVERA_Contract_${contract.contractNumber || id.slice(-6)}_${lang}.pdf"`,
+                'Content-Disposition': `attachment; filename="VOLVERA_Contract_Template_${lang.toUpperCase()}.pdf"`,
             },
         });
 
     } catch (error) {
-        console.error('PDF Generation Error:', error);
-        return NextResponse.json({ error: 'Failed to generate contract PDF' }, { status: 500 });
+        console.error('Template PDF Generation Error:', error);
+        return NextResponse.json({ error: 'Failed to generate template PDF' }, { status: 500 });
     }
 }
