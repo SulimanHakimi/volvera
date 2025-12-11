@@ -4,6 +4,7 @@ import "./globals.css";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import AuthProvider from "@/components/providers/AuthProvider";
 import Header from "@/components/layout/Header";
+import AxiosConfigProvider from "@/components/providers/AxiosConfigProvider";
 import ScrollToTop from "./ScrollToTop";
 
 const inter = Inter({
@@ -29,13 +30,15 @@ export default function RootLayout({ children }) {
       <body className={inter.className} suppressHydrationWarning>
         <AuthProvider>
           <LanguageProvider>
-            <Suspense fallback={null}>
-              <ScrollToTop />
-            </Suspense>
-            <Header />
-            <main className="">
-              {children}
-            </main>
+            <AxiosConfigProvider>
+              <Suspense fallback={null}>
+                <ScrollToTop />
+              </Suspense>
+              <Header />
+              <main className="">
+                {children}
+              </main>
+            </AxiosConfigProvider>
           </LanguageProvider>
         </AuthProvider>
       </body>
