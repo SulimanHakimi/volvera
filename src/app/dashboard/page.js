@@ -275,7 +275,7 @@ export default function DashboardPage() {
                                 </button>
                             </div>
                         ) : (
-                            <div className="overflow-x-auto">
+                            <div className="h-fit">
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b border-white/10">

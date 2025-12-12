@@ -124,8 +124,8 @@ export default function UploadDocuments() {
                 {/* Message */}
                 {message && (
                     <div className={`p-3 rounded-lg text-sm ${message.includes('success')
-                            ? 'bg-green-500/10 text-green-400 border border-green-500/20'
-                            : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                        ? 'bg-green-500/10 text-green-400 border border-green-500/20'
+                        : 'bg-red-500/10 text-red-400 border border-red-500/20'
                         }`}>
                         {message}
                     </div>
@@ -138,7 +138,17 @@ export default function UploadDocuments() {
                     className="btn btn-primary w-full"
                 >
                     <FiUpload className="mr-2" />
-                    {uploading ? t('documents.uploading') : t('documents.upload_button')}
+                    {uploading ? (
+                        <div className="flex items-center justify-center gap-2">
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            {t('documents.uploading')}
+                        </div>
+                    ) : (
+                        <>
+                            <FiUpload className="mr-2" />
+                            {t('documents.upload_button')}
+                        </>
+                    )}
                 </button>
             </div>
         </div>

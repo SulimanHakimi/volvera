@@ -5,8 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiPlus, FiTrash2 } from 'react-icons/fi';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
-export default function ApplyFormModal({ isOpen, onClose }) {
+export default function ApplyFormModal({ isOpen, onClose, onSuccess }) {
     const { t } = useTranslation();
     const [formData, setFormData] = useState({
         fullName: '',
@@ -42,12 +43,20 @@ export default function ApplyFormModal({ isOpen, onClose }) {
         setFormData(prev => ({ ...prev, platforms: newPlatforms }));
     };
 
+    const router = useRouter();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            router.push('/login');
+            return;
+        }
+
         setFormStatus({ loading: true, message: '', type: '' });
 
         try {
-            const token = localStorage.getItem('accessToken');
             const payload = {
                 originalLanguage: formData.language === 'en' ? 'fa' : formData.language, // Fallback 'en' to 'fa' for now as DB only supports fa/ps, or maybe allow en? Let's just map for safety or let it pass if model updated. I'll map 'en' -> 'fa' if validation is strict, but better to just send. Actually, let's map platforms correctly.
                 originalLanguage: formData.language,
@@ -69,6 +78,8 @@ export default function ApplyFormModal({ isOpen, onClose }) {
                 type: 'success'
             });
 
+            if (onSuccess) onSuccess();
+
             setTimeout(() => {
                 onClose();
                 setFormData({
@@ -85,6 +96,10 @@ export default function ApplyFormModal({ isOpen, onClose }) {
 
         } catch (error) {
             console.error(error);
+            if (error.response?.status === 401) {
+                router.push('/login');
+                return;
+            }
             const errMsg = error.response?.data?.error || error.message || t('apply_form.error');
             setFormStatus({
                 loading: false,
@@ -264,7 +279,12 @@ export default function ApplyFormModal({ isOpen, onClose }) {
                                             disabled={formStatus.loading}
                                             className="w-full bg-[#06b6d4] text-[#042028] font-bold py-3 rounded-xl transition-all hover:opacity-90 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
-                                            {formStatus.loading ? t('apply_form.submitting') : t('apply_form.submit')}
+                                            {formStatus.loading ? (
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <div className="w-5 h-5 border-2 border-[#042028] border-t-transparent rounded-full animate-spin"></div>
+                                                    {t('apply_form.submitting')}
+                                                </div>
+                                            ) : t('apply_form.submit')}
                                         </button>
                                     </form>
                                 </div>

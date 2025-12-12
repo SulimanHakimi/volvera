@@ -162,7 +162,12 @@ export default function RegisterPage() {
                             className="w-full bg-[#06b6d4] text-[#042028] font-bold py-3 rounded-xl transition-all hover:opacity-90 relative"
                         >
                             <span className="relative z-10">
-                                {loading ? t('common.loading') : t('auth.register_button')}
+                                {loading ? (
+                                    <div className="flex items-center justify-center gap-2">
+                                        <div className="w-5 h-5 border-2 border-[#042028] border-t-transparent rounded-full animate-spin"></div>
+                                        {t('common.loading')}
+                                    </div>
+                                ) : t('auth.register_button')}
                             </span>
                         </button>
                     </form>

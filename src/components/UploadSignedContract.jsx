@@ -110,7 +110,10 @@ export default function UploadSignedContract({ contractId, status, signedUrl }) 
                     className="btn btn-primary flex items-center gap-2 disabled:opacity-50"
                 >
                     {uploading ? (
-                        <>Uploading...</>
+                        <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            Uploading...
+                        </div>
                     ) : (
                         <>
                             <FiUpload /> Upload Signed Contract

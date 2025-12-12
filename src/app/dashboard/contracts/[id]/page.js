@@ -14,6 +14,7 @@ export default function ContractDetailsPage({ params }) {
     const [contract, setContract] = useState(null);
     const [loading, setLoading] = useState(true);
     const [terminationLoading, setTerminationLoading] = useState(false);
+    const [downloadingLang, setDownloadingLang] = useState(null);
 
     useEffect(() => {
         const fetchContract = async () => {
@@ -80,6 +81,36 @@ export default function ContractDetailsPage({ params }) {
 
     const isPartnership = contract.type === 'partnership' || !contract.type;
     const isTermination = contract.type === 'termination';
+
+    const handleDownload = async (lang) => {
+        setDownloadingLang(lang);
+        try {
+            const token = localStorage.getItem('accessToken');
+            const response = await axios.get(`/api/contracts/${contract._id}/pdf?lang=${lang}`, {
+                headers: { Authorization: `Bearer ${token}` },
+                responseType: 'blob'
+            });
+
+            // Create a blob url and trigger download
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `contract-${contract.contractNumber}-${lang}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Download failed:', error);
+            if (error.response?.status === 401) {
+                router.push('/login');
+            } else {
+                alert('Failed to download contract. Please try again.');
+            }
+        } finally {
+            setDownloadingLang(null);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-[#0b1220] pb-20 pt-8">
@@ -176,27 +207,30 @@ export default function ContractDetailsPage({ params }) {
                             <div className="card p-6">
                                 <h3 className="font-bold mb-4">{t('dashboard.official_contract')}</h3>
                                 <div className="space-y-3">
-                                    <a
-                                        href={`/api/contracts/${contract._id}/pdf?lang=en`}
-                                        target="_blank"
-                                        className="btn btn-secondary w-full justify-center flex items-center gap-2"
+                                    <button
+                                        onClick={() => handleDownload('en')}
+                                        disabled={downloadingLang !== null}
+                                        className="btn btn-secondary w-full justify-center flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
-                                        <FiDownload /> Download (English)
-                                    </a>
-                                    <a
-                                        href={`/api/contracts/${contract._id}/pdf?lang=fa`}
-                                        target="_blank"
-                                        className="btn btn-secondary w-full justify-center flex items-center gap-2"
+                                        {downloadingLang === 'en' ? <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div> : <FiDownload />}
+                                        {downloadingLang === 'en' ? 'Downloading...' : 'Download (English)'}
+                                    </button>
+                                    <button
+                                        onClick={() => handleDownload('fa')}
+                                        disabled={downloadingLang !== null}
+                                        className="btn btn-secondary w-full justify-center flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
-                                        <FiDownload /> Download (Persian)
-                                    </a>
-                                    <a
-                                        href={`/api/contracts/${contract._id}/pdf?lang=ps`}
-                                        target="_blank"
-                                        className="btn btn-secondary w-full justify-center flex items-center gap-2"
+                                        {downloadingLang === 'fa' ? <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div> : <FiDownload />}
+                                        {downloadingLang === 'fa' ? 'Downloading...' : 'Download (Persian)'}
+                                    </button>
+                                    <button
+                                        onClick={() => handleDownload('ps')}
+                                        disabled={downloadingLang !== null}
+                                        className="btn btn-secondary w-full justify-center flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
-                                        <FiDownload /> Download (Pashto)
-                                    </a>
+                                        {downloadingLang === 'ps' ? <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div> : <FiDownload />}
+                                        {downloadingLang === 'ps' ? 'Downloading...' : 'Download (Pashto)'}
+                                    </button>
                                 </div>
                                 <p className="text-xs text-gray-400 text-center mt-3">
                                     Generated on {new Date(contract.createdAt).toLocaleDateString()}
@@ -226,7 +260,12 @@ export default function ContractDetailsPage({ params }) {
                                         disabled={terminationLoading}
                                         className="w-full py-2 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors text-sm font-semibold"
                                     >
-                                        {terminationLoading ? 'Requesting...' : 'Request Termination'}
+                                        {terminationLoading ? (
+                                            <div className="flex items-center justify-center gap-2">
+                                                <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin"></div>
+                                                Requesting...
+                                            </div>
+                                        ) : 'Request Termination'}
                                     </button>
                                 </div>
                             )}
