@@ -34,7 +34,12 @@ export default function DocumentsPage() {
     };
 
     const handleStatusChange = async (fileId, newStatus) => {
-        if (!confirm(`Are you sure you want to ${newStatus} this document?`)) return;
+        const isReject = newStatus === 'rejected';
+        const confirmMsg = isReject
+            ? "Are you sure you want to REJECT and DELETE this document? This action cannot be undone."
+            : `Are you sure you want to ${newStatus} this document?`;
+
+        if (!confirm(confirmMsg)) return;
 
         setUpdatingId(fileId);
         try {
@@ -44,9 +49,15 @@ export default function DocumentsPage() {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            setFiles(prev => prev.map(f =>
-                f._id === fileId ? { ...f, status: newStatus } : f
-            ));
+            if (isReject) {
+                // If rejected, remove from list entirely
+                setFiles(prev => prev.filter(f => f._id !== fileId));
+            } else {
+                // Otherwise update status in place
+                setFiles(prev => prev.map(f =>
+                    f._id === fileId ? { ...f, status: newStatus } : f
+                ));
+            }
         } catch (error) {
             alert(error.response?.data?.error || 'Failed to update status');
         } finally {

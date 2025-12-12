@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
@@ -19,6 +19,14 @@ export default function AdminLayout({ children }) {
     const pathname = usePathname();
     const router = useRouter();
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [user, setUser] = useState({});
+
+    useEffect(() => {
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+            setUser(JSON.parse(userStr));
+        }
+    }, [pathname]);
 
     const handleLogout = () => {
         localStorage.removeItem('user');
@@ -90,8 +98,8 @@ export default function AdminLayout({ children }) {
                     {/* User Info / Logout */}
                     <div className="p-4 border-t border-white/5">
                         <div className="bg-white/5 rounded-xl p-4 mb-3">
-                            <div className="text-sm font-medium text-white mb-0.5">Admin User</div>
-                            <div className="text-xs text-gray-500">admin@platform.com</div>
+                            <div className="text-sm font-medium text-white mb-0.5">{user?.name || 'Admin User'}</div>
+                            <div className="text-xs text-gray-500">{user?.email || 'admin@platform.com'}</div>
                         </div>
                         <button
                             onClick={handleLogout}

@@ -1,12 +1,36 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FiMail, FiMapPin, FiArrowRight, FiPhone } from 'react-icons/fi';
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaYoutube, FaInstagram, FaHeart } from 'react-icons/fa';
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaYoutube, FaInstagram, FaHeart, FaTiktok } from 'react-icons/fa';
 import Image from 'next/image';
+import axios from 'axios';
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
+    const [settings, setSettings] = useState({});
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const res = await axios.get('/api/settings/public');
+                setSettings(res.data || {});
+            } catch (error) {
+                console.error('Failed to fetch footer settings');
+            }
+        };
+        fetchSettings();
+    }, []);
+
+    const socialMap = [
+        { key: 'socialFacebook', icon: FaFacebookF, label: 'Facebook' },
+        { key: 'socialTwitter', icon: FaTwitter, label: 'Twitter' },
+        { key: 'socialLinkedin', icon: FaLinkedinIn, label: 'LinkedIn' },
+        { key: 'socialYoutube', icon: FaYoutube, label: 'YouTube' },
+        { key: 'socialInstagram', icon: FaInstagram, label: 'Instagram' },
+        { key: 'socialTiktok', icon: FaTiktok, label: 'TikTok' },
+    ];
 
     return (
         <footer className="relative bg-[#0f1724] border-t border-[rgba(255,255,255,0.03)]">
@@ -24,7 +48,7 @@ export default function Footer() {
                                 </div>
                             </div>
                             <div>
-                                <div className="font-bold text-lg text-white">VOLVERA</div>
+                                <div className="font-bold text-lg text-white">{settings.siteName || 'VOLVERA'}</div>
                                 <div className="text-xs text-[#9aa4b2]">Empower Your Creativity</div>
                             </div>
                         </div>
@@ -32,25 +56,23 @@ export default function Footer() {
                             Join thousands of creators worldwide who keep 99.5% of their earnings. Build your empire, we'll handle the rest.
                         </p>
 
-                        <div className="flex gap-3">
-                            {/* todo: add social links */}
-                            {[
-                                { icon: FaFacebookF, href: 'https://facebook.com', label: 'Facebook' },
-                                { icon: FaLinkedinIn, href: 'https://linkedin.com', label: 'LinkedIn' },
-                                { icon: FaYoutube, href: 'https://youtube.com', label: 'YouTube' },
-                                { icon: FaInstagram, href: 'https://instagram.com', label: 'Instagram' },
-                            ].map((social, i) => (
-                                <a
-                                    key={i}
-                                    href={social.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    aria-label={social.label}
-                                    className="w-10 h-10 rounded-xl bg-[rgba(255,255,255,0.03)] hover:bg-gradient-to-br hover:from-[#06b6d4] hover:to-[#7c3aed] flex items-center justify-center transition-all duration-300 group border border-[rgba(255,255,255,0.03)] hover:border-transparent"
-                                >
-                                    <social.icon className="w-4 h-4 text-[#9aa4b2] group-hover:text-white transition-colors" />
-                                </a>
-                            ))}
+                        <div className="flex gap-3 flex-wrap">
+                            {socialMap.map((social, i) => {
+                                const url = settings[social.key];
+                                if (!url) return null;
+                                return (
+                                    <a
+                                        key={i}
+                                        href={url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label={social.label}
+                                        className="w-10 h-10 rounded-xl bg-[rgba(255,255,255,0.03)] hover:bg-gradient-to-br hover:from-[#06b6d4] hover:to-[#7c3aed] flex items-center justify-center transition-all duration-300 group border border-[rgba(255,255,255,0.03)] hover:border-transparent"
+                                    >
+                                        <social.icon className="w-4 h-4 text-[#9aa4b2] group-hover:text-white transition-colors" />
+                                    </a>
+                                );
+                            })}
                         </div>
                     </div>
                     <div>
@@ -113,8 +135,8 @@ export default function Footer() {
                                 </div>
                                 <div>
                                     <div className="text-xs text-[#9aa4b2] mb-1">Email</div>
-                                    <a href="mailto:volvera.se@hotmail.com" className="text-sm text-[#9aa4b2] hover:text-[#06b6d4] transition-colors">
-                                        volvera.se@hotmail.com
+                                    <a href={`mailto:${settings.contactEmail || 'volvera.se@hotmail.com'}`} className="text-sm text-[#9aa4b2] hover:text-[#06b6d4] transition-colors">
+                                        {settings.contactEmail || 'volvera.se@hotmail.com'}
                                     </a>
                                 </div>
                             </li>
@@ -135,8 +157,7 @@ export default function Footer() {
                                 </div>
                                 <div>
                                     <div className="text-xs text-[#9aa4b2] mb-1">Location</div>
-                                    <span className="text-sm text-[#9aa4b2]">Stockholm, Sweden</span>
-                                    {/* todo: update */}
+                                    <span className="text-sm text-[#9aa4b2]">{settings.companyAddress || 'Stockholm, Sweden'}</span>
                                 </div>
                             </li>
                         </ul>

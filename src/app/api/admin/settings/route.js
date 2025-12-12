@@ -2,14 +2,7 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 
 
-import mongoose from 'mongoose';
-
-const ConfigSchema = new mongoose.Schema({
-    key: { type: String, required: true, unique: true },
-    value: mongoose.Schema.Types.Mixed
-}, { timestamps: true });
-
-const Config = mongoose.models.Config || mongoose.model('Config', ConfigSchema);
+import Config from '@/models/Config';
 
 import { verifyToken, extractTokenFromHeader } from '@/utils/jwt';
 

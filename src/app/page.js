@@ -224,9 +224,9 @@ export default function HomePage() {
         <section className="py-12 border-t border-dashed border-[rgba(255,255,255,0.03)]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { number: '10K+', label: t('stats.active_creators') },
+              { number: '9+', label: t('stats.active_creators') },
               { number: '99.5%', label: t('stats.earnings_retained') },
-              { number: '50+', label: t('stats.countries') },
+              { number: '3+', label: t('stats.countries') },
             ].map((stat, i) => (
               <motion.div
                 key={i}

@@ -13,6 +13,8 @@ export default function ContractsPage() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
+    const [downloadingFile, setDownloadingFile] = useState(null);
+
     const [updatingId, setUpdatingId] = useState(null);
 
     // PDF Viewer State
@@ -75,6 +77,7 @@ export default function ContractsPage() {
 
     // Download PDF
     const handleDownload = async (contract, lang = 'en') => {
+        setDownloadingFile(`${contract._id}-${lang}`);
         try {
             const token = localStorage.getItem('accessToken');
             const response = await axios.get(`/api/contracts/${contract._id}/pdf?lang=${lang}`, {
@@ -91,6 +94,8 @@ export default function ContractsPage() {
             link.remove();
         } catch (error) {
             alert('Failed to download PDF');
+        } finally {
+            setDownloadingFile(null);
         }
     };
 
@@ -268,33 +273,54 @@ export default function ContractsPage() {
                                         <FiEye className="w-5 h-5" />
                                     </button>
 
-                                    {/* Download PDF */}
+                                    {/* Download PDF Buttons */}
                                     <button
                                         onClick={() => handleDownload(contract, 'en')}
-                                        className="btn btn-secondary p-3 hover:bg-blue-500/30 transition-all"
+                                        disabled={downloadingFile !== null}
+                                        className="btn btn-secondary p-3 hover:bg-blue-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                         title="Download English PDF"
                                     >
                                         <div className="relative">
-                                            <FiDownload className="w-5 h-5" />
-                                            <span className="absolute -top-2 -right-2 text-[0.6rem] bg-blue-500 px-1 rounded-full">EN</span>
+                                            {downloadingFile === `${contract._id}-en` ? (
+                                                <div className="w-5 h-5 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin"></div>
+                                            ) : (
+                                                <FiDownload className="w-5 h-5" />
+                                            )}
+                                            <span className="absolute -top-2 -right-2 text-[0.6rem] bg-blue-500 px-1 rounded-full text-white">EN</span>
                                         </div>
                                     </button>
 
-                                    {/* Download Original PDF if not English */}
-                                    {contract.originalLanguage !== 'en' && (
-                                        <button
-                                            onClick={() => handleDownload(contract, 'original')}
-                                            className="btn btn-secondary p-3 hover:bg-green-500/30 transition-all"
-                                            title={`Download ${contract.originalLanguage === 'fa' ? 'Persian' : 'Pashto'} PDF`}
-                                        >
-                                            <div className="relative">
+                                    <button
+                                        onClick={() => handleDownload(contract, 'fa')}
+                                        disabled={downloadingFile !== null}
+                                        className="btn btn-secondary p-3 hover:bg-cyan-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                        title="Download Persian PDF"
+                                    >
+                                        <div className="relative">
+                                            {downloadingFile === `${contract._id}-fa` ? (
+                                                <div className="w-5 h-5 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin"></div>
+                                            ) : (
                                                 <FiDownload className="w-5 h-5" />
-                                                <span className="absolute -top-2 -right-2 text-[0.6rem] bg-green-500 px-1 rounded-full">
-                                                    {contract.originalLanguage.toUpperCase()}
-                                                </span>
-                                            </div>
-                                        </button>
-                                    )}
+                                            )}
+                                            <span className="absolute -top-2 -right-2 text-[0.6rem] bg-cyan-500 px-1 rounded-full text-white">FA</span>
+                                        </div>
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleDownload(contract, 'ps')}
+                                        disabled={downloadingFile !== null}
+                                        className="btn btn-secondary p-3 hover:bg-green-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                        title="Download Pashto PDF"
+                                    >
+                                        <div className="relative">
+                                            {downloadingFile === `${contract._id}-ps` ? (
+                                                <div className="w-5 h-5 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin"></div>
+                                            ) : (
+                                                <FiDownload className="w-5 h-5" />
+                                            )}
+                                            <span className="absolute -top-2 -right-2 text-[0.6rem] bg-green-500 px-1 rounded-full text-white">PS</span>
+                                        </div>
+                                    </button>
 
                                     {['submitted', 'under_review', 'pending'].includes(contract.status) && (
                                         <>

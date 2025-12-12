@@ -1,22 +1,26 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FiSave, FiGlobe, FiLock, FiShield } from 'react-icons/fi';
+import { FiBriefcase, FiUpload, FiShare2 } from 'react-icons/fi';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function SettingsPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [settings, setSettings] = useState({
-        siteName: 'VOLVERA',
-        contactEmail: 'volvera.se@hotmail.com',
-        maxUploadSize: 10,
-        allowedFileTypes: 'pdf, docx, jpg, png',
-        allowRegistration: true,
-        enableSocialLogin: true,
-        maintenanceMode: false
+        companyRegistrationNumber: '',
+        companyAddress: '',
+        companySignatureUrl: '',
+        socialFacebook: '',
+        socialTwitter: '',
+        socialInstagram: '',
+        socialLinkedin: '',
+        socialYoutube: '',
+        socialTiktok: ''
     });
+    const [signatureFile, setSignatureFile] = useState(null);
 
     useEffect(() => {
         const fetchSettings = async () => {
@@ -51,15 +55,51 @@ export default function SettingsPage() {
         }));
     };
 
+    const handleFileChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            setSignatureFile(e.target.files[0]);
+        }
+    };
+
     const handleSave = async () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('accessToken');
-            await axios.post('/api/admin/settings', settings, {
+            let signatureUrl = settings.companySignatureUrl;
+
+            // Upload signature if a new file is selected
+            if (signatureFile) {
+                const formData = new FormData();
+                formData.append('file', signatureFile);
+
+                const uploadRes = await axios.post('/api/upload', formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+
+                if (uploadRes.data?.file?.path) {
+                    signatureUrl = uploadRes.data.file.path;
+                    setSettings(prev => ({ ...prev, companySignatureUrl: signatureUrl }));
+                }
+            }
+
+            // Save all settings
+            const settingsToSave = {
+                ...settings,
+                companySignatureUrl: signatureUrl
+            };
+
+            await axios.post('/api/admin/settings', settingsToSave, {
                 headers: { Authorization: `Bearer ${token}` }
             });
+
+            setSignatureFile(null); // Clear selected file after successful save
+            alert('Settings saved successfully!');
         } catch (error) {
-            alert('Failed to save settings');
+            console.error(error);
+            alert('Failed to save settings: ' + (error.response?.data?.error || error.message));
         } finally {
             setLoading(false);
         }
@@ -73,134 +113,176 @@ export default function SettingsPage() {
             </div>
 
             <div className="grid gap-6">
-                {/* General Settings */}
+
+                {/* Company Information */}
                 <div className="card p-6 space-y-4">
                     <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
-                            <FiGlobe className="w-5 h-5" />
+                        <div className="p-2 rounded-lg bg-orange-500/10 text-orange-400">
+                            <FiBriefcase className="w-5 h-5" />
                         </div>
-                        <h2 className="text-lg font-semibold">General Information</h2>
+                        <h2 className="text-lg font-semibold">Company Information</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="label">Site Name</label>
+                            <label className="label">Company Registration Number</label>
                             <input
                                 type="text"
-                                name="siteName"
+                                name="companyRegistrationNumber"
                                 className="input"
-                                value={settings.siteName}
+                                placeholder="Org. nr"
+                                value={settings.companyRegistrationNumber || ''}
                                 onChange={handleChange}
                             />
                         </div>
                         <div>
-                            <label className="label">Contact Email</label>
-                            <input
-                                type="email"
-                                name="contactEmail"
-                                className="input"
-                                value={settings.contactEmail}
+                            <label className="label">Registered Address</label>
+                            <textarea
+                                name="companyAddress"
+                                className="input min-h-[42px]"
+                                rows={3}
+                                placeholder="Street, City, Country"
+                                value={settings.companyAddress || ''}
                                 onChange={handleChange}
                             />
+                        </div>
+                        <div className="md:col-span-2">
+                            <label className="label">Company Signature (Image)</label>
+                            <div className="flex items-start gap-4">
+                                <div className="flex-1">
+                                    <div className="relative">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleFileChange}
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                        />
+                                        <div className="input flex items-center gap-2 text-gray-400 group-hover:text-white transition-colors">
+                                            <FiUpload />
+                                            <span className="truncate">
+                                                {signatureFile ? signatureFile.name : 'Click to upload new signature'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Recommended: Transparent PNG, max 2MB.
+                                    </p>
+                                </div>
+                                {(settings.companySignatureUrl || signatureFile) && (
+                                    <div className="w-32 h-16 border border-white/10 rounded-lg bg-white/5 flex items-center justify-center overflow-hidden relative">
+                                        {signatureFile ? (
+                                            /* Preview local blob if selected */
+                                            <img
+                                                src={URL.createObjectURL(signatureFile)}
+                                                alt="New Signature Preview"
+                                                className="max-w-full max-h-full object-contain"
+                                            />
+                                        ) : (
+                                            /* Show existing URL */
+                                            <img
+                                                src={settings.companySignatureUrl}
+                                                alt="Current Signature"
+                                                className="max-w-full max-h-full object-contain"
+                                            />
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Upload Settings */}
+                {/* Social Media Links */}
                 <div className="card p-6 space-y-4">
                     <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
-                            <FiSave className="w-5 h-5" />
+                        <div className="p-2 rounded-lg bg-pink-500/10 text-pink-400">
+                            <FiShare2 className="w-5 h-5" />
                         </div>
-                        <h2 className="text-lg font-semibold">Contract & File Settings</h2>
+                        <h2 className="text-lg font-semibold">Social Media Links</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="label">Max Upload Size (MB)</label>
+                            <label className="label">Facebook URL</label>
                             <input
-                                type="number"
-                                name="maxUploadSize"
+                                type="url"
+                                name="socialFacebook"
                                 className="input"
-                                value={settings.maxUploadSize}
+                                placeholder="https://facebook.com/..."
+                                value={settings.socialFacebook || ''}
                                 onChange={handleChange}
                             />
                         </div>
                         <div>
-                            <label className="label">Allowed File Types</label>
+                            <label className="label">Instagram URL</label>
                             <input
-                                type="text"
-                                name="allowedFileTypes"
+                                type="url"
+                                name="socialInstagram"
                                 className="input"
-                                value={settings.allowedFileTypes}
+                                placeholder="https://instagram.com/..."
+                                value={settings.socialInstagram || ''}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div>
+                            <label className="label">Twitter (X) URL</label>
+                            <input
+                                type="url"
+                                name="socialTwitter"
+                                className="input"
+                                placeholder="https://twitter.com/..."
+                                value={settings.socialTwitter || ''}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div>
+                            <label className="label">LinkedIn URL</label>
+                            <input
+                                type="url"
+                                name="socialLinkedin"
+                                className="input"
+                                placeholder="https://linkedin.com/..."
+                                value={settings.socialLinkedin || ''}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div>
+                            <label className="label">YouTube URL</label>
+                            <input
+                                type="url"
+                                name="socialYoutube"
+                                className="input"
+                                placeholder="https://youtube.com/..."
+                                value={settings.socialYoutube || ''}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div>
+                            <label className="label">TikTok URL</label>
+                            <input
+                                type="url"
+                                name="socialTiktok"
+                                className="input"
+                                placeholder="https://tiktok.com/..."
+                                value={settings.socialTiktok || ''}
                                 onChange={handleChange}
                             />
                         </div>
                     </div>
                 </div>
 
-                {/* Security Settings */}
-                <div className="card p-6 space-y-4">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 rounded-lg bg-red-500/10 text-red-400">
-                            <FiShield className="w-5 h-5" />
-                        </div>
-                        <h2 className="text-lg font-semibold">Security & Access</h2>
-                    </div>
+            </div>
 
-                    <div className="space-y-3">
-                        <label className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 cursor-pointer hover:bg-white/10 transition-colors">
-                            <span className="text-sm font-medium">Allow New User Registrations</span>
-                            <div className="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full border border-white/10 bg-white/5">
-                                <input
-                                    type="checkbox"
-                                    name="allowRegistration"
-                                    checked={settings.allowRegistration}
-                                    onChange={handleChange}
-                                    className="absolute w-full h-full opacity-0 cursor-pointer"
-                                />
-                                <span className={`absolute left-0 inline-block w-6 h-6 border rounded-full shadow transform transition-transform duration-200 ease-in-out ${settings.allowRegistration ? 'translate-x-6 bg-purple-500 border-purple-500' : 'translate-x-0 bg-gray-400 border-gray-400'}`}></span>
-                            </div>
-                        </label>
-                        <label className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 cursor-pointer hover:bg-white/10 transition-colors">
-                            <span className="text-sm font-medium">Enable Social Login</span>
-                            <div className="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full border border-white/10 bg-white/5">
-                                <input
-                                    type="checkbox"
-                                    name="enableSocialLogin"
-                                    checked={settings.enableSocialLogin}
-                                    onChange={handleChange}
-                                    className="absolute w-full h-full opacity-0 cursor-pointer"
-                                />
-                                <span className={`absolute left-0 inline-block w-6 h-6 border rounded-full shadow transform transition-transform duration-200 ease-in-out ${settings.enableSocialLogin ? 'translate-x-6 bg-purple-500 border-purple-500' : 'translate-x-0 bg-gray-400 border-gray-400'}`}></span>
-                            </div>
-                        </label>
-                        <label className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 cursor-pointer hover:bg-white/10 transition-colors">
-                            <span className="text-sm font-medium">Maintenance Mode</span>
-                            <div className="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full border border-white/10 bg-white/5">
-                                <input
-                                    type="checkbox"
-                                    name="maintenanceMode"
-                                    checked={settings.maintenanceMode}
-                                    onChange={handleChange}
-                                    className="absolute w-full h-full opacity-0 cursor-pointer"
-                                />
-                                <span className={`absolute left-0 inline-block w-6 h-6 border rounded-full shadow transform transition-transform duration-200 ease-in-out ${settings.maintenanceMode ? 'translate-x-6 bg-purple-500 border-purple-500' : 'translate-x-0 bg-gray-400 border-gray-400'}`}></span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <div className="flex justify-end pt-4">
-                    <button
-                        onClick={handleSave}
-                        disabled={loading}
-                        className="btn btn-primary"
-                    >
-                        {loading ? 'Saving...' : 'Save Changes'}
-                    </button>
-                </div>
+            <div className="flex justify-end pt-4">
+                <button
+                    onClick={handleSave}
+                    disabled={loading}
+                    className="btn btn-primary"
+                >
+                    {loading ? 'Saving...' : 'Save Changes'}
+                </button>
             </div>
         </div>
+
     );
 }

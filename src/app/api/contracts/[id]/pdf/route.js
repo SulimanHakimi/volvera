@@ -1,11 +1,13 @@
-// app/api/contracts/[id]/pdf/route.js
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Contract from '@/models/Contract';
+import Config from '@/models/Config'; // Import Config model
 import { verifyToken, extractTokenFromHeader } from '@/utils/jwt';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import { contractContent } from '@/lib/contractContent';
+import { readFile } from 'fs/promises'; // Import readFile
+import { join } from 'path'; // Import join
 
 const authenticate = (request) => {
     const token = extractTokenFromHeader(request.headers.get('Authorization'));
@@ -26,6 +28,10 @@ export async function GET(request, { params }) {
         console.log('Generating PDF for Contract ID:', id, 'Lang:', lang);
 
         await connectDB();
+
+        // Fetch Settings
+        const configs = await Config.find({});
+        const settings = configs.reduce((acc, curr) => ({ ...acc, [curr.key]: curr.value }), {});
 
         const contract = await Contract.findById(id).populate('user');
         if (!contract) {
@@ -52,7 +58,7 @@ export async function GET(request, { params }) {
             const fontBytes = await fetch('https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSansArabic/NotoSansArabic-Regular.ttf').then(res => res.arrayBuffer());
             persianFont = await pdfDoc.embedFont(fontBytes);
 
-            // Bold (Simulated by using Medium or Bold if available, using Regular for now to be safe or fetching another weight)
+            // Bold
             const boldFontBytes = await fetch('https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSansArabic/NotoSansArabic-Bold.ttf').then(res => res.arrayBuffer());
             persianBoldFont = await pdfDoc.embedFont(boldFontBytes);
         } catch (e) {
@@ -76,15 +82,8 @@ export async function GET(request, { params }) {
         const currentLangCode = (lang === 'original') ? contract.originalLanguage : lang;
         const txt = contractContent[currentLangCode] || contractContent['en'];
 
-        // Helper: Fix Text for RTL
         const fixText = (text) => {
             if (!text) return '';
-            // Very basic RTL reversing if needed, though pdf-lib + fontkit usually needs custom shaping (like via separate lib). 
-            // For complex Arabic scripting with pdf-lib, often a shaping library is needed. 
-            // However, ensuring we just print it might be enough if not perfect. 
-            // NOTE: pdf-lib does NOT support RTL text shaping/layout out of the box. 
-            // We assume basic rendering. Real RTL support often requires 'bidi-js' or similar to reorder logic.
-            // For now, we will rely on standard embedding.
             return text;
         };
 
@@ -131,10 +130,6 @@ export async function GET(request, { params }) {
                     const lineWidth = fontToUse.widthOfTextAtSize(line, size);
                     xPos = (width - lineWidth) / 2;
                 } else if (align === 'right' || isRTL) {
-                    // For RTL simplified alignment (not true bidi)
-                    // If really RTL, we might want to align right visually even if text isn't shaped perfectly
-                    // But usually contract text is justified or left-aligned in western standards.
-                    // In Persian/Pashto documents, right alignment is standard.
                     if (isRTL) {
                         const lineWidth = fontToUse.widthOfTextAtSize(line, size);
                         xPos = width - margin - lineWidth;
@@ -178,7 +173,15 @@ export async function GET(request, { params }) {
         // Company
         drawWrappedText(txt.company.label, 11, usedBoldFont, purple);
         drawWrappedText(txt.company.name, 12, usedBoldFont, black);
-        txt.company.details.forEach(detail => drawWrappedText(detail, 10, usedFont, gray));
+
+        // Dynamic Company Details
+        const companyDetails = [];
+        if (settings.companyAddress) companyDetails.push(settings.companyAddress);
+        if (settings.companyRegistrationNumber) companyDetails.push(`Reg. No: ${settings.companyRegistrationNumber}`);
+        // Fallback if no settings
+        const detailsToRender = companyDetails.length > 0 ? companyDetails : txt.company.details;
+
+        detailsToRender.forEach(detail => drawWrappedText(detail, 10, usedFont, gray));
         y -= 15;
 
         // Contractor
@@ -219,13 +222,44 @@ export async function GET(request, { params }) {
 
         const sigY = y;
 
-        // Left (Contractor usually, or Company) - Let's follow template
-        // Template: Company Left/Right? Actually template had Company then Contractor. 
-        // Let's do side by side or vertical if no space. 
-        // Side by side is standard.
-
         const leftX = margin;
         const rightX = width / 2 + 20;
+
+        if (settings.companySignatureUrl) {
+            try {
+                const relativePath = settings.companySignatureUrl.startsWith('/')
+                    ? settings.companySignatureUrl.slice(1)
+                    : settings.companySignatureUrl;
+
+                const imagePath = join(process.cwd(), 'public', relativePath);
+                const imageBytes = await readFile(imagePath);
+
+                let sigImage;
+                if (settings.companySignatureUrl.toLowerCase().endsWith('.png')) {
+                    sigImage = await pdfDoc.embedPng(imageBytes);
+                } else if (settings.companySignatureUrl.toLowerCase().endsWith('.jpg') || settings.companySignatureUrl.toLowerCase().endsWith('.jpeg')) {
+                    sigImage = await pdfDoc.embedJpg(imageBytes);
+                }
+
+                if (sigImage) {
+                    const sigDims = sigImage.scale(0.25); // Scale down
+                    // Center horizontally over the line (width 200)
+                    const lineLength = 200;
+                    const centeredX = leftX + (lineLength - sigDims.width) / 2;
+
+                    const overlappingY = sigY - 10;
+
+                    page.drawImage(sigImage, {
+                        x: centeredX,
+                        y: overlappingY,
+                        width: sigDims.width,
+                        height: sigDims.height,
+                    });
+                }
+            } catch (err) {
+                console.error('Failed to embed company signature:', err);
+            }
+        }
 
         // Line for Company
         page.drawLine({ start: { x: leftX, y: sigY }, end: { x: leftX + 200, y: sigY }, thickness: 1, color: black });
