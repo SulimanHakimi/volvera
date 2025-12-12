@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiSearch, FiMessageSquare, FiTrash2, FiUserPlus, FiLock, FiUnlock, FiX, FiSend } from 'react-icons/fi';
+import { FiSearch, FiMessageSquare, FiTrash2, FiUserPlus, FiLock, FiUnlock, FiX, FiSend, FiEye, FiFileText, FiFolder } from 'react-icons/fi';
 import axios from 'axios';
 import Loader from '@/components/ui/Loader';
 
@@ -21,6 +21,15 @@ export default function UsersPage() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [notifData, setNotifData] = useState({ title: '', message: '' });
     const [sendLoading, setSendLoading] = useState(false);
+
+    // User Details Modal
+    const [detailsModal, setDetailsModal] = useState({
+        isOpen: false,
+        user: null,
+        contracts: [],
+        files: [],
+        loading: false
+    });
 
     useEffect(() => {
         fetchUsers();
@@ -112,6 +121,33 @@ export default function UsersPage() {
             alert('Failed to send notification');
         } finally {
             setSendLoading(false);
+        }
+    };
+
+    const handleViewDetails = async (user) => {
+        setDetailsModal({
+            isOpen: true,
+            user: user,
+            contracts: [],
+            files: [],
+            loading: true
+        });
+
+        try {
+            const token = localStorage.getItem('accessToken');
+            const res = await axios.get(`/api/admin/users/${user._id}/details`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            setDetailsModal(prev => ({
+                ...prev,
+                contracts: res.data.contracts || [],
+                files: res.data.files || [],
+                loading: false
+            }));
+        } catch (error) {
+            console.error('Failed to load user details:', error);
+            setDetailsModal(prev => ({ ...prev, loading: false }));
         }
     };
 
@@ -207,6 +243,13 @@ export default function UsersPage() {
                                     <td className="p-4 text-sm text-gray-400">{new Date(user.createdAt).toLocaleDateString()}</td>
                                     <td className="p-4 text-right">
                                         <div className="flex items-center justify-end gap-2">
+                                            <button
+                                                onClick={() => handleViewDetails(user)}
+                                                className="p-1.5 hover:bg-blue-500/10 rounded-lg text-gray-400 hover:text-blue-400 transition-colors"
+                                                title="View Details"
+                                            >
+                                                <FiEye className="w-4 h-4" />
+                                            </button>
                                             <button
                                                 onClick={() => openNotifModal(user)}
                                                 className="p-1.5 hover:bg-[var(--accent)]/10 rounded-lg text-gray-400 hover:text-[var(--accent)] transition-colors"
@@ -366,6 +409,136 @@ export default function UsersPage() {
                                     </button>
                                 </div>
                             </form>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            {/* User Details Modal */}
+            <AnimatePresence>
+                {detailsModal.isOpen && (
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            className="bg-[#0f172a] border border-white/10 rounded-2xl w-full max-w-4xl p-0 relative shadow-2xl my-8 flex flex-col max-h-[90vh]"
+                        >
+                            {/* Header */}
+                            <div className="p-6 border-b border-white/10 flex justify-between items-center sticky top-0 bg-[#0f172a] z-10 rounded-t-2xl">
+                                <div>
+                                    <h2 className="text-xl font-bold text-white mb-1">User Details</h2>
+                                    <p className="text-gray-400 text-sm">{detailsModal.user?.name} ({detailsModal.user?.email})</p>
+                                </div>
+                                <button
+                                    onClick={() => setDetailsModal(prev => ({ ...prev, isOpen: false }))}
+                                    className="text-gray-400 hover:text-white p-2 hover:bg-white/5 rounded-lg transition-colors"
+                                >
+                                    <FiX className="w-6 h-6" />
+                                </button>
+                            </div>
+
+                            {/* Content */}
+                            <div className="p-6 overflow-y-auto custom-scrollbar space-y-8">
+                                {detailsModal.loading ? (
+                                    <div className="flex justify-center items-center py-20">
+                                        <Loader fullScreen={false} />
+                                    </div>
+                                ) : (
+                                    <>
+                                        {/* Contracts Section */}
+                                        <section>
+                                            <div className="flex items-center gap-3 mb-4">
+                                                <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+                                                    <FiFileText className="w-5 h-5" />
+                                                </div>
+                                                <h3 className="text-lg font-bold text-white">Contracts</h3>
+                                                <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-gray-400">
+                                                    {detailsModal.contracts.length}
+                                                </span>
+                                            </div>
+
+                                            {detailsModal.contracts.length === 0 ? (
+                                                <div className="text-center py-8 bg-white/5 rounded-xl border border-dashed border-white/10">
+                                                    <p className="text-gray-500">No contracts found for this user.</p>
+                                                </div>
+                                            ) : (
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    {detailsModal.contracts.map(contract => (
+                                                        <div key={contract._id} className="p-4 rounded-xl bg-white/5 border border-white/5 hover:border-blue-500/30 transition-colors">
+                                                            <div className="flex justify-between items-start mb-2">
+                                                                <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${contract.status === 'active' ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-400'}`}>
+                                                                    {contract.status}
+                                                                </span>
+                                                                <span className="text-xs text-gray-500">
+                                                                    {new Date(contract.createdAt).toLocaleDateString()}
+                                                                </span>
+                                                            </div>
+                                                            <h4 className="font-medium text-white mb-1 truncate" title={contract.title || 'Untitled Contract'}>
+                                                                {contract.title || `Contract #${contract._id.slice(-6)}`}
+                                                            </h4>
+                                                            <div className="text-xs text-gray-400">
+                                                                Platform: {contract.platform || 'N/A'}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </section>
+
+                                        {/* Uploaded Files Section */}
+                                        <section>
+                                            <div className="flex items-center gap-3 mb-4">
+                                                <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
+                                                    <FiFolder className="w-5 h-5" />
+                                                </div>
+                                                <h3 className="text-lg font-bold text-white">Uploaded Files</h3>
+                                                <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-gray-400">
+                                                    {detailsModal.files.length}
+                                                </span>
+                                            </div>
+
+                                            {detailsModal.files.length === 0 ? (
+                                                <div className="text-center py-8 bg-white/5 rounded-xl border border-dashed border-white/10">
+                                                    <p className="text-gray-500">No files uploaded by this user.</p>
+                                                </div>
+                                            ) : (
+                                                <div className="grid grid-cols-1 gap-3">
+                                                    {detailsModal.files.map(file => (
+                                                        <div key={file._id} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group">
+                                                            <div className="flex items-center gap-3 overflow-hidden">
+                                                                <div className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0">
+                                                                    <FiFileText className="text-gray-400" />
+                                                                </div>
+                                                                <div className="min-w-0">
+                                                                    <div className="text-sm font-medium text-white truncate group-hover:text-blue-400 transition-colors">
+                                                                        {file.originalName}
+                                                                    </div>
+                                                                    <div className="text-xs text-gray-500 flex items-center gap-2">
+                                                                        <span>{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                                                                        <span>•</span>
+                                                                        <span className={file.status === 'approved' ? 'text-green-400' : file.status === 'rejected' ? 'text-red-400' : 'text-yellow-400'}>
+                                                                            {file.status}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <a
+                                                                href={file.path}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="btn btn-xs btn-ghost text-gray-400 hover:text-white"
+                                                            >
+                                                                Download
+                                                            </a>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </section>
+                                    </>
+                                )}
+                            </div>
                         </motion.div>
                     </div>
                 )}
