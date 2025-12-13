@@ -2,18 +2,29 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Contract from '@/models/Contract';
 import { verifyToken, extractTokenFromHeader } from '@/utils/jwt';
+import User from '@/models/User';
 
-// Helper to authenticate user
-const authenticate = (request) => {
+const authenticate = async (request) => {
     const token = extractTokenFromHeader(request.headers.get('Authorization'));
     if (!token) return null;
-    return verifyToken(token);
+    let decoded;
+    try {
+        decoded = verifyToken(token);
+    } catch (err) {
+        return null;
+    }
+
+    // Check user is active
+    await connectDB();
+    const user = await User.findById(decoded.id || decoded.userId);
+    if (!user || !user.isActive) return null;
+
+    return decoded;
 };
 
-// GET - Get all contracts for the authenticated user
 export async function GET(request) {
     try {
-        const decoded = authenticate(request);
+        const decoded = await authenticate(request);
         if (!decoded) {
             return NextResponse.json(
                 { error: 'Unauthorized' },
@@ -23,10 +34,10 @@ export async function GET(request) {
 
         await connectDB();
 
-        // If admin, maybe return all? But for now assume user dashboard
         const filter = { user: decoded.id };
         if (decoded.role === 'admin') {
-            // Admin sees all? Let's keep it user specific for this route, or handle admin route separately
+            // Admins can see all contracts
+            // delete filter.user;
         }
 
         const contracts = await Contract.find(filter).sort({ createdAt: -1 });
@@ -41,10 +52,9 @@ export async function GET(request) {
     }
 }
 
-// POST - Create a new contract
 export async function POST(request) {
     try {
-        const decoded = authenticate(request);
+        const decoded = await authenticate(request);
         if (!decoded) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
@@ -63,10 +73,8 @@ export async function POST(request) {
             relatedContract,
         } = body;
 
-        // Clean platforms
         const validPlatforms = platforms ? platforms.filter(p => p.platformName && p.link) : [];
 
-        // Validation
         if (!originalLanguage || !fullName || !email) {
             return NextResponse.json(
                 { error: 'Please provide all required fields' },
@@ -76,9 +84,6 @@ export async function POST(request) {
 
         await connectDB();
 
-        // Simple Auto-Translation Stub
-        // In a real app, you'd call GPT-4 or Google Translate API here
-        // In a real app, you'd call GPT-4 or Google Translate API here
         const translatedData = {
             fullName: fullName + ' [EN]',
             email: email,

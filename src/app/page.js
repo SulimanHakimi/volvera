@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import Header from '@/components/layout/Header';
@@ -9,9 +9,10 @@ import ApplyFormModal from '@/components/forms/ApplyFormModal';
 import Link from 'next/link';
 
 export default function HomePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [formStatus, setFormStatus] = useState('');
+  const [publicSettings, setPublicSettings] = useState({});
 
   const handleInlineSubmit = (e) => {
     e.preventDefault();
@@ -37,6 +38,35 @@ export default function HomePage() {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  useEffect(() => {
+    const fetchPublicSettings = async () => {
+      try {
+        const res = await fetch('/api/settings/public');
+        if (res.ok) {
+          const data = await res.json();
+          setPublicSettings(data || {});
+        }
+      } catch (err) {
+        console.error('Failed to load public settings', err);
+      }
+    };
+    fetchPublicSettings();
+  }, []);
+
+  const aboutText = (() => {
+    try {
+      const lang = (i18n && i18n.language) ? i18n.language : 'en';
+      const key = `aboutUs_${lang}`;
+      return publicSettings[key] || '';
+    } catch (e) {
+      return '';
+    }
+  })();
+  const isRtl = i18n && ['fa', 'ps'].includes(i18n.language);
+
+  const aboutTitle = t('about.title') !== 'about.title' ? t('about.title') : 'About Us';
+  const aboutFallback = t('about.fallback') !== 'about.fallback' ? t('about.fallback') : '';
 
   return (
     <div className="min-h-screen font-['Inter'] text-[#e6eef6]" style={{ backgroundColor: '#0f1724' }}>
@@ -193,6 +223,21 @@ export default function HomePage() {
         </section>
 
         {/* FAQ */}
+        {/* About Us */}
+        <section id="about" className="scroll-mt-20 py-12 border-t border-dashed border-[rgba(255,255,255,0.03)]">
+          <div className="flex items-center gap-4 mb-6">
+            <h2 className="text-2xl font-bold">{aboutTitle}</h2>
+            <div className="h-px bg-[rgba(255,255,255,0.03)] flex-1"></div>
+          </div>
+
+          <div className="custom-card text-[14px] leading-relaxed">
+            {aboutText ? (
+              <p dir={isRtl ? 'rtl' : 'ltr'} className="whitespace-pre-line">{aboutText}</p>
+            ) : (
+              <p className="text-muted">{aboutFallback}</p>
+            )}
+          </div>
+        </section>
         <section id="faq" className="scroll-mt-20 py-12 border-t border-dashed border-[rgba(255,255,255,0.03)]">
           <div className="flex items-center gap-4 mb-6">
             <h2 className="text-2xl font-bold">{t('faq.title')}</h2>

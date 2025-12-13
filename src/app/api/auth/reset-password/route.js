@@ -20,7 +20,6 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Invalid or expired token' }, { status: 400 });
         }
 
-        // Set new password
         user.password = password;
         user.passwordResetToken = undefined;
         user.passwordResetExpires = undefined;

@@ -10,6 +10,7 @@
         "dashboard": "Dashboard",
         "logout": "Logout",
         "profile": "Profile",
+        "about": "About Us",
         "admin": "Admin Panel"
     },
     "hero": {

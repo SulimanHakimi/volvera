@@ -17,7 +17,6 @@ export default function ContractsPage() {
 
     const [updatingId, setUpdatingId] = useState(null);
 
-    // PDF Viewer State
     const [pdfUrl, setPdfUrl] = useState(null);
     const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
     const [pdfLoading, setPdfLoading] = useState(false);
@@ -54,7 +53,6 @@ export default function ContractsPage() {
         }
     };
 
-    // Open PDF in modal
     const handleViewPdf = async (contract) => {
         setPdfLoading(true);
         setIsPdfModalOpen(true);
@@ -67,7 +65,7 @@ export default function ContractsPage() {
 
             const blob = new Blob([response.data], { type: 'application/pdf' });
             const url = window.URL.createObjectURL(blob);
-            setPdfUrl(url);
+                setPdfUrl(url);
         } catch (error) {
             setIsPdfModalOpen(false);
         } finally {
@@ -75,7 +73,6 @@ export default function ContractsPage() {
         }
     };
 
-    // Download PDF
     const handleDownload = async (contract, lang = 'en') => {
         setDownloadingFile(`${contract._id}-${lang}`);
         try {
@@ -230,8 +227,15 @@ export default function ContractsPage() {
                                     <FiFileText className="w-8 h-8 text-[var(--accent)]" />
                                 </div>
                                 <div className="flex-1">
-                                    <h3 className="text-xl font-bold text-white">Partnership Agreement</h3>
-                                    <p className="text-sm text-gray-400 mt-1">
+                                    <div className="flex items-center gap-3">
+                                        <h3 className="text-xl font-bold text-white">
+                                            {contract.type === 'termination' ? 'Termination Request' : 'Partnership Agreement'}
+                                        </h3>
+                                        <span className={`px-2 py-1 rounded text-xs font-semibold ${contract.type === 'termination' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-green-500/10 text-green-400 border border-green-500/20'}`}>
+                                            {contract.type === 'termination' ? 'Termination' : 'Partnership'}
+                                        </span>
+                                    </div>
+                                        <p className="text-sm text-gray-400 mt-1">
                                         ID: <span className="text-[var(--accent)] font-semibold">{contract.contractNumber || contract._id.slice(-8)}</span> •
                                         Submitted {new Date(contract.createdAt).toLocaleDateString()}
                                     </p>
@@ -251,6 +255,12 @@ export default function ContractsPage() {
                                                     contract.originalLanguage === 'ps' ? 'پښتو' : 'English'}
                                             </span>
                                         </div>
+                                        <div>
+                                            <span className="text-gray-400">Type:</span>{' '}
+                                            <span className={`px-2 py-1 rounded-md text-xs font-medium ${contract.type === 'termination' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-green-500/10 text-green-400 border-green-500/20'}`}>
+                                                {contract.type === 'termination' ? 'Termination' : 'Partnership'}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -266,7 +276,7 @@ export default function ContractsPage() {
                                 <div className="flex gap-3">
                                     {/* View PDF */}
                                     <button
-                                        onClick={() => handleViewPdf(contract)}
+                                    onClick={() => handleViewPdf(contract)}
                                         className="btn btn-secondary p-3 hover:bg-[var(--accent)]/10 transition-all"
                                         title="View Contract PDF"
                                     >
@@ -278,7 +288,7 @@ export default function ContractsPage() {
                                         onClick={() => handleDownload(contract, 'en')}
                                         disabled={downloadingFile !== null}
                                         className="btn btn-secondary p-3 hover:bg-blue-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                                        title="Download English PDF"
+                                        title="Download PDF (English)"
                                     >
                                         <div className="relative">
                                             {downloadingFile === `${contract._id}-en` ? (
@@ -294,7 +304,7 @@ export default function ContractsPage() {
                                         onClick={() => handleDownload(contract, 'fa')}
                                         disabled={downloadingFile !== null}
                                         className="btn btn-secondary p-3 hover:bg-cyan-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                                        title="Download Persian PDF"
+                                        title="Download PDF (Persian)"
                                     >
                                         <div className="relative">
                                             {downloadingFile === `${contract._id}-fa` ? (
@@ -310,7 +320,7 @@ export default function ContractsPage() {
                                         onClick={() => handleDownload(contract, 'ps')}
                                         disabled={downloadingFile !== null}
                                         className="btn btn-secondary p-3 hover:bg-green-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                                        title="Download Pashto PDF"
+                                        title="Download PDF (Pashto)"
                                     >
                                         <div className="relative">
                                             {downloadingFile === `${contract._id}-ps` ? (

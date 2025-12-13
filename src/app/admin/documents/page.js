@@ -50,10 +50,8 @@ export default function DocumentsPage() {
             );
 
             if (isReject) {
-                // If rejected, remove from list entirely
                 setFiles(prev => prev.filter(f => f._id !== fileId));
             } else {
-                // Otherwise update status in place
                 setFiles(prev => prev.map(f =>
                     f._id === fileId ? { ...f, status: newStatus } : f
                 ));

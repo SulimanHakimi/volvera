@@ -13,6 +13,9 @@ export default function SettingsPage() {
         companyRegistrationNumber: '',
         companyAddress: '',
         companySignatureUrl: '',
+        aboutUs_en: '',
+        aboutUs_fa: '',
+        aboutUs_ps: '',
         socialFacebook: '',
         socialTwitter: '',
         socialInstagram: '',
@@ -21,6 +24,7 @@ export default function SettingsPage() {
         socialTiktok: ''
     });
     const [signatureFile, setSignatureFile] = useState(null);
+    const [signaturePreview, setSignaturePreview] = useState(null);
 
     useEffect(() => {
         const fetchSettings = async () => {
@@ -45,7 +49,7 @@ export default function SettingsPage() {
             }
         };
         fetchSettings();
-    }, []);
+    }, [router]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -57,7 +61,11 @@ export default function SettingsPage() {
 
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files[0]) {
-            setSignatureFile(e.target.files[0]);
+            const file = e.target.files[0];
+            setSignatureFile(file);
+            const reader = new FileReader();
+            reader.onload = (ev) => setSignaturePreview(ev.target.result);
+            reader.readAsDataURL(file);
         }
     };
 
@@ -85,7 +93,6 @@ export default function SettingsPage() {
                 }
             }
 
-            // Save all settings
             const settingsToSave = {
                 ...settings,
                 companySignatureUrl: signatureUrl
@@ -95,7 +102,7 @@ export default function SettingsPage() {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            setSignatureFile(null); // Clear selected file after successful save
+            setSignatureFile(null);
             alert('Settings saved successfully!');
         } catch (error) {
             console.error(error);
@@ -171,23 +178,76 @@ export default function SettingsPage() {
                                 {(settings.companySignatureUrl || signatureFile) && (
                                     <div className="w-32 h-16 border border-white/10 rounded-lg bg-white/5 flex items-center justify-center overflow-hidden relative">
                                         {signatureFile ? (
-                                            /* Preview local blob if selected */
-                                            <img
-                                                src={URL.createObjectURL(signatureFile)}
-                                                alt="New Signature Preview"
-                                                className="max-w-full max-h-full object-contain"
-                                            />
+                                            signaturePreview ? (
+                                                <Image
+                                                    src={signaturePreview}
+                                                    alt="New Signature Preview"
+                                                    width={128}
+                                                    height={64}
+                                                    className="max-w-full max-h-full object-contain"
+                                                    unoptimized={true}
+                                                />
+                                            ) : (
+                                                <div className="text-muted">Preview loading...</div>
+                                            )
                                         ) : (
-                                            /* Show existing URL */
-                                            <img
+                                            <Image
                                                 src={settings.companySignatureUrl}
                                                 alt="Current Signature"
+                                                width={128}
+                                                height={64}
                                                 className="max-w-full max-h-full object-contain"
                                             />
                                         )}
                                     </div>
                                 )}
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* About Us */}
+                <div className="card p-6 space-y-4">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 rounded-lg bg-green-500/10 text-green-400">
+                            <FiBriefcase className="w-5 h-5" />
+                        </div>
+                        <h2 className="text-lg font-semibold">About Us (Editable)</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4">
+                        <div>
+                            <label className="label">About Us (English)</label>
+                            <textarea
+                                name="aboutUs_en"
+                                className="input min-h-[82px]"
+                                rows={4}
+                                placeholder="About us (English)"
+                                value={settings.aboutUs_en || ''}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div>
+                            <label className="label">About Us (Persian)</label>
+                            <textarea
+                                name="aboutUs_fa"
+                                className="input min-h-[82px]"
+                                rows={4}
+                                placeholder="About us (فارسی)"
+                                value={settings.aboutUs_fa || ''}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div>
+                            <label className="label">About Us (Pashto)</label>
+                            <textarea
+                                name="aboutUs_ps"
+                                className="input min-h-[82px]"
+                                rows={4}
+                                placeholder="About us (پښتو)"
+                                value={settings.aboutUs_ps || ''}
+                                onChange={handleChange}
+                            />
                         </div>
                     </div>
                 </div>

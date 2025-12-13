@@ -28,7 +28,6 @@ export const authOptions = {
 
     callbacks: {
         async jwt({ token, user, account }) {
-            // Initial sign in
             if (account && user) {
                 await connectDB();
 
@@ -43,7 +42,7 @@ export const authOptions = {
                         role: 'user',
                         oauthProvider: account.provider,
                         oauthId: account.providerAccountId,
-                        isEmailVerified: true, // Social logins are verified
+                        isEmailVerified: true,
                         lastLogin: new Date()
                     });
                 } else {
@@ -51,14 +50,12 @@ export const authOptions = {
                     dbUser.lastLogin = new Date();
                     if (!dbUser.avatar) dbUser.avatar = user.image;
                     if (!dbUser.oauthProvider) {
-                        // Link account if user exists but wasn't created via OAuth
                         dbUser.oauthProvider = account.provider;
                         dbUser.oauthId = account.providerAccountId;
                     }
                     await dbUser.save();
                 }
 
-                // Generate our own custom tokens matching the manual login flow
                 const accessToken = signToken({
                     id: dbUser._id,
                     email: dbUser.email,

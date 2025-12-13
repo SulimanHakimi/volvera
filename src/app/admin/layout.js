@@ -19,14 +19,32 @@ export default function AdminLayout({ children }) {
     const pathname = usePathname();
     const router = useRouter();
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState(() => {
+        try {
+            const s = localStorage.getItem('user');
+            return s ? JSON.parse(s) : {};
+        } catch (err) {
+            return {};
+        }
+    });
 
     useEffect(() => {
-        const userStr = localStorage.getItem('user');
-        if (userStr) {
-            setUser(JSON.parse(userStr));
+        if (user && user.role !== 'admin') {
+            router.push('/dashboard');
+            return;
         }
-    }, [pathname]);
+    }, [user, pathname, router]);
+
+    useEffect(() => {
+        const onAuthChange = () => {
+            try {
+                const s = localStorage.getItem('user');
+                if (s) setUser(JSON.parse(s));
+            } catch (err) { }
+        };
+        window.addEventListener('user-auth-change', onAuthChange);
+        return () => window.removeEventListener('user-auth-change', onAuthChange);
+    }, []);
 
     const handleLogout = () => {
         localStorage.removeItem('user');
@@ -98,8 +116,8 @@ export default function AdminLayout({ children }) {
                     {/* User Info / Logout */}
                     <div className="p-4 border-t border-white/5">
                         <div className="bg-white/5 rounded-xl p-4 mb-3">
-                            <div className="text-sm font-medium text-white mb-0.5">{user?.name || 'Admin User'}</div>
-                            <div className="text-xs text-gray-500">{user?.email || 'admin@platform.com'}</div>
+                            <div className="text-sm font-medium text-white mb-0.5">{user?.name}</div>
+                            <div className="text-xs text-gray-500">{user?.email}</div>
                         </div>
                         <button
                             onClick={handleLogout}

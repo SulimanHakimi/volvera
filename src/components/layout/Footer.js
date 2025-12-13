@@ -84,6 +84,7 @@ export default function Footer() {
                             {[
                                 { label: 'Features', href: '/#features' },
                                 { label: 'How It Works', href: '/#how-it-works' },
+                                { label: 'About Us', href: '/#about' },
                                 { label: 'FAQ', href: '/#faq' },
                                 { label: 'Dashboard', href: '/dashboard' },
                             ].map((link, i) => (

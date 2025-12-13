@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Contract from '@/models/Contract';
-import Config from '@/models/Config'; // Import Config model
+import Config from '@/models/Config';
 import { verifyToken, extractTokenFromHeader } from '@/utils/jwt';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import { contractContent } from '@/lib/contractContent';
-import { readFile } from 'fs/promises'; // Import readFile
-import { join } from 'path'; // Import join
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 
 const authenticate = (request) => {
     const token = extractTokenFromHeader(request.headers.get('Authorization'));
@@ -29,7 +29,6 @@ export async function GET(request, { params }) {
 
         await connectDB();
 
-        // Fetch Settings
         const configs = await Config.find({});
         const settings = configs.reduce((acc, curr) => ({ ...acc, [curr.key]: curr.value }), {});
 
@@ -38,27 +37,22 @@ export async function GET(request, { params }) {
             return NextResponse.json({ error: `Contract not found` }, { status: 404 });
         }
 
-        // Ownership check
         if (contract.user._id.toString() !== decoded.id && decoded.role !== 'admin') {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        // Create PDF
         const pdfDoc = await PDFDocument.create();
         pdfDoc.registerFontkit(fontkit);
 
-        // Fonts
         const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
         const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
         let persianFont;
         let persianBoldFont;
         try {
-            // Regular
             const fontBytes = await fetch('https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSansArabic/NotoSansArabic-Regular.ttf').then(res => res.arrayBuffer());
             persianFont = await pdfDoc.embedFont(fontBytes);
 
-            // Bold
             const boldFontBytes = await fetch('https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSansArabic/NotoSansArabic-Bold.ttf').then(res => res.arrayBuffer());
             persianBoldFont = await pdfDoc.embedFont(boldFontBytes);
         } catch (e) {
@@ -145,10 +139,9 @@ export async function GET(request, { params }) {
                 });
                 y -= (size + 6);
             }
-            y -= 4; // Extra paragraph spacing
+            y -= 4;
         };
 
-        // --- RENDER CONTENT ---
 
         // 1. Header
         checkPageBreak(50);

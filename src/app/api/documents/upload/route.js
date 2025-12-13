@@ -5,6 +5,7 @@ import Notification from '@/models/Notification';
 import { verifyToken, extractTokenFromHeader } from '@/utils/jwt';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 
 const authenticate = (request) => {
     const token = extractTokenFromHeader(request.headers.get('Authorization'));
@@ -34,7 +35,7 @@ export async function POST(request) {
 
         // Rate limiting: max 10 uploads per hour per user
         const now = Date.now();
-        const userKey = decoded.id;
+        const userKey = decoded.id || decoded.userId;
         const attempts = uploadAttempts.get(userKey) || [];
         const recentAttempts = attempts.filter(time => now - time < 3600000); // 1 hour
 
@@ -63,7 +64,10 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Invalid category' }, { status: 400 });
         }
 
-        const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'documents');
+        // Allow override with environment variable (e.g., S3, or custom path)
+        // When deploying to environments like Vercel, writing to `public` may not be allowed.
+        // Fallback to OS temp if FILE_UPLOAD_PATH is not configured.
+        const uploadDir = process.env.FILE_UPLOAD_PATH || (process.env.NODE_ENV === 'production' ? path.join(os.tmpdir(), 'uploads', 'documents') : path.join(process.cwd(), 'public', 'uploads', 'documents'));
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
         }
@@ -144,12 +148,13 @@ export async function POST(request) {
 
             // Save to database
             const fileDoc = await File.create({
-                user: decoded.id,
+                user: decoded.id || decoded.userId,
                 filename: filename,
                 originalName: sanitizedName,
                 mimeType: file.type,
                 size: file.size,
-                path: `/uploads/documents/${filename}`,
+                // If using temp dir in production, serve via temporary route to retrieve
+                path: path.resolve(uploadDir).startsWith(path.resolve(process.cwd())) ? `/uploads/documents/${filename}` : `/api/documents/temp/${filename}`,
                 category: category,
                 status: 'pending',
             });

@@ -119,6 +119,13 @@ export default function Header() {
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#06b6d4] to-[#7c3aed] group-hover:w-full transition-all duration-300"></span>
                         </Link>
                         <Link
+                            href="/#about"
+                            className="text-sm font-medium text-[#9aa4b2] hover:text-white transition-colors relative group"
+                        >
+                            {t('nav.about')}
+                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#06b6d4] to-[#7c3aed] group-hover:w-full transition-all duration-300"></span>
+                        </Link>
+                        <Link
                             href="/#faq"
                             className="text-sm font-medium text-[#9aa4b2] hover:text-white transition-colors relative group"
                         >
@@ -284,6 +291,13 @@ export default function Header() {
                                     onClick={() => setMobileMenuOpen(false)}
                                 >
                                     {t('nav.how_it_works')}
+                                </Link>
+                                <Link
+                                    href="/#about"
+                                    className="block px-4 py-3 hover:bg-[rgba(255,255,255,0.03)] rounded-xl transition-colors text-sm font-medium text-[#9aa4b2] hover:text-white"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    {t('nav.about')}
                                 </Link>
                                 <Link
                                     href="/#faq"

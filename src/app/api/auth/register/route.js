@@ -40,7 +40,6 @@ export async function POST(req) {
             await sendVerificationEmail(user.email, user.name, verificationToken);
         } catch (emailError) {
             console.error('Failed to send verification email:', emailError);
-            // Optionally, we could rollback user creation here, or just let them resend verification later
         }
 
         return NextResponse.json({

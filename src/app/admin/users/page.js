@@ -11,18 +11,16 @@ export default function UsersPage() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Add User Modal
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [newUser, setNewUser] = useState({ name: '', email: '', password: '', role: 'user' });
     const [addLoading, setAddLoading] = useState(false);
+    const [roleUpdatingId, setRoleUpdatingId] = useState(null);
 
-    // Notification Modal
     const [isNotifModalOpen, setIsNotifModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [notifData, setNotifData] = useState({ title: '', message: '' });
     const [sendLoading, setSendLoading] = useState(false);
 
-    // User Details Modal
     const [detailsModal, setDetailsModal] = useState({
         isOpen: false,
         user: null,
@@ -82,6 +80,21 @@ export default function UsersPage() {
         } catch (error) {
             alert('Failed to update user status');
         }
+    };
+
+    const handleRoleChange = async (user, newRole) => {
+        if (!confirm(`Change role for ${user.name} to ${newRole}?`)) return;
+        setRoleUpdatingId(user._id);
+        try {
+            const token = localStorage.getItem('accessToken');
+            const res = await axios.patch(`/api/admin/users/${user._id}`, { role: newRole }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setUsers(users.map(u => u._id === user._id ? res.data.user : u));
+        } catch (error) {
+            alert('Failed to update user role');
+        }
+        setRoleUpdatingId(null);
     };
 
     const handleDelete = async (userId) => {
@@ -219,12 +232,15 @@ export default function UsersPage() {
                                         </div>
                                     </td>
                                     <td className="p-4">
-                                        <span className={`px-2 py-1 rounded-md text-xs font-medium border ${user.role === 'admin'
-                                            ? 'bg-[var(--accent)]/10 text-[var(--accent)] border-[var(--accent)]/20'
-                                            : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                                            }`}>
-                                            {user.role}
-                                        </span>
+                                        <select
+                                            className="input text-sm w-36"
+                                            value={user.role}
+                                            onChange={(e) => handleRoleChange(user, e.target.value)}
+                                            disabled={roleUpdatingId === user._id}
+                                        >
+                                            <option value="user">User</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
                                     </td>
                                     <td className="p-4">
                                         <span className={`px-2 py-1 rounded-full text-xs font-medium items-center gap-1.5 inline-flex ${user.isEmailVerified

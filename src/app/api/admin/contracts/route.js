@@ -4,15 +4,26 @@ import Contract from '@/models/Contract';
 import User from '@/models/User';
 import { verifyToken, extractTokenFromHeader } from '@/utils/jwt';
 
-const authenticate = (request) => {
+const authenticate = async (request) => {
     const token = extractTokenFromHeader(request.headers.get('Authorization'));
     if (!token) return null;
-    return verifyToken(token);
+    let decoded;
+    try {
+        decoded = verifyToken(token);
+    } catch (err) {
+        return null;
+    }
+
+    await connectDB();
+    const user = await User.findById(decoded.id || decoded.userId);
+    if (!user || !user.isActive) return null;
+
+    return decoded;
 };
 
 export async function GET(request) {
     try {
-        const decoded = authenticate(request);
+        const decoded = await authenticate(request);
         if (!decoded || decoded.role !== 'admin') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }

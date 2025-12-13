@@ -26,11 +26,20 @@ export default function ContractDetailsPage({ params }) {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
-                // Find the specific contract from the list (since we don't have a single GET endpoint yet)
-                // Ideally should implement GET /api/contracts/[id]
                 const found = res.data.contracts.find(c => c._id === id);
                 if (found) {
                     setContract(found);
+                    // If this is a termination request that has been approved, sign the user out
+                    if (found.type === 'termination' && found.status === 'approved') {
+                        try {
+                            alert('Your account has been deactivated by admin. You will be logged out.');
+                        } catch (err) { }
+                        localStorage.removeItem('accessToken');
+                        localStorage.removeItem('user');
+                        window.dispatchEvent(new Event('user-auth-change'));
+                        router.push('/login');
+                        return;
+                    }
                 } else {
                     // router.push('/dashboard');
                 }
@@ -62,7 +71,7 @@ export default function ContractDetailsPage({ params }) {
                 message: "Termination Request for Contract #" + contract.contractNumber,
                 type: 'termination',
                 relatedContract: contract._id,
-                status: 'submitted' // Auto-submit termination request
+                status: 'submitted'
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -91,7 +100,6 @@ export default function ContractDetailsPage({ params }) {
                 responseType: 'blob'
             });
 
-            // Create a blob url and trigger download
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;

@@ -1,4 +1,3 @@
-// app/api/contract-template/route.js
 import { NextResponse } from 'next/server';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
@@ -15,7 +14,6 @@ export async function GET(request) {
         const pdfDoc = await PDFDocument.create();
         pdfDoc.registerFontkit(fontkit);
 
-        // Fonts
         const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
         const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
@@ -47,7 +45,6 @@ export async function GET(request) {
         // Content
         const txt = contractContent[lang] || contractContent['en'];
 
-        // Helper: Fix Text for RTL
         const fixText = (text) => {
             if (!text) return '';
             return text;
@@ -60,7 +57,6 @@ export async function GET(request) {
         const margin = 50;
         const contentWidth = width - (margin * 2);
 
-        // Helper: Add Page if needed
         const checkPageBreak = (neededHeight) => {
             if (y - neededHeight < 50) {
                 page = pdfDoc.addPage([595.28, 841.89]);
@@ -114,7 +110,6 @@ export async function GET(request) {
             y -= 4;
         };
 
-        // --- RENDER CONTENT ---
 
         // 1. Header
         checkPageBreak(50);
