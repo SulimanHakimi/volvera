@@ -67,7 +67,7 @@ function LoginForm() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center px-4 py-4 relative overflow-hidden">
             {/* bg effects here */}
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#7c3aed]/10 rounded-full blur-3xl"></div>
