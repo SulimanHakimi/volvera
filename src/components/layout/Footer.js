@@ -136,8 +136,8 @@ export default function Footer() {
                                 </div>
                                 <div>
                                     <div className="text-xs text-[#9aa4b2] mb-1">Email</div>
-                                    <a href={`mailto:${settings.contactEmail || 'volvera.se@hotmail.com'}`} className="text-sm text-[#9aa4b2] hover:text-[#06b6d4] transition-colors">
-                                        {settings.contactEmail || 'volvera.se@hotmail.com'}
+                                    <a href={`mailto:${settings.contactEmail || 'nor.volvera@gmail.com'}`} className="text-sm text-[#9aa4b2] hover:text-[#06b6d4] transition-colors">
+                                        {settings.contactEmail || 'nor.volvera@gmail.com'}
                                     </a>
                                 </div>
                             </li>

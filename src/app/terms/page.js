@@ -106,7 +106,7 @@ export default function TermsPage() {
                             For questions about these Terms of Service, please contact us:
                         </p>
                         <div className="mt-3 p-4 bg-[var(--card)] rounded-lg border border-[var(--border)]">
-                            <p className="text-sm">Email: volvera.se@hotmail.com</p>
+                            <p className="text-sm">Email: nor.volvera@gmail.com</p>
                             <p className="text-sm">Address: Volvera, Inc</p>
                         </div>
                     </div>
