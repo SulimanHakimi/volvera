@@ -188,7 +188,7 @@ export default function ContractsPage() {
             {/* Search & Filter */}
             <div className="card p-5">
                 <div className="flex flex-col md:flex-row gap-4">
-                    <div className="relative flex-1">
+                    <div className="relative flex-2">
                         <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"

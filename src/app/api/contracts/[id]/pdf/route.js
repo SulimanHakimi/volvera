@@ -281,7 +281,12 @@ export async function GET(request, { params }) {
         y -= 10;
 
         // Contractor
-        const contractorLabel = isRTL ? (contractType === 'termination' ? 'از طرف پیمانکار:' : 'و پیمانکار:') : (contractType === 'termination' ? 'FROM CONTRACTOR:' : 'AND CONTRACTOR:');
+        let contractorLabel = (contractType === 'termination' ? 'FROM CONTRACTOR:' : 'AND CONTRACTOR:');
+        if (lang === 'ps') {
+            contractorLabel = (contractType === 'termination' ? 'له قراردادي څخه:' : 'او قراردادي:');
+        } else if (isRTL) {
+            contractorLabel = (contractType === 'termination' ? 'از طرف پیمانکار:' : 'و پیمانکار:');
+        }
         drawWrappedText(contractorLabel, 10, usedBoldFont, purple);
 
         let cData = contract.originalData;
@@ -411,7 +416,12 @@ export async function GET(request, { params }) {
 
         // Line for Company
         page.drawLine({ start: { x: leftX, y: sigY }, end: { x: leftX + 200, y: sigY }, thickness: 1, color: black });
-        const companySigLabel = isRTL ? 'Volvera (شرکت)' : 'Volvera (Company)';
+
+        let companySigLabel = 'Volvera (Company)';
+        if (lang === 'ps') companySigLabel = 'Volvera (شرکت)';
+        else if (lang === 'fa') companySigLabel = 'Volvera (شرکت)';
+        else if (isRTL) companySigLabel = 'Volvera (شرکت)'; // Fallback for other RTL or original RTL
+
         try {
             const lbl = fixText(companySigLabel);
             if (lbl.startsWith('[Text')) {
@@ -425,7 +435,12 @@ export async function GET(request, { params }) {
 
         // Line for Contractor
         page.drawLine({ start: { x: rightX, y: sigY }, end: { x: rightX + 200, y: sigY }, thickness: 1, color: black });
-        const contractorSigLabel = isRTL ? 'پیمانکار' : 'Contractor';
+
+        let contractorSigLabel = 'Contractor';
+        if (lang === 'ps') contractorSigLabel = 'قراردادي';
+        else if (lang === 'fa') contractorSigLabel = 'پیمانکار';
+        else if (isRTL) contractorSigLabel = 'پیمانکار';
+
         try {
             const lbl = fixText(contractorSigLabel);
             if (lbl.startsWith('[Text')) {

@@ -65,6 +65,7 @@
         "channels_platforms": "کانال‌ها و پلتفرم‌ها",
         "platform": "پلتفرم",
         "channel_link": "لینک کانال",
+        "link_placeholder": "https://...",
         "add_another": "افزودن حساب دیگر",
         "country": "کشور",
         "phone": "شماره تلفن (اختیاری)",
@@ -130,6 +131,14 @@
         "official_contract": "قرارداد رسمی",
         "contract_signed_uploaded": "قرارداد امضا و اپلود شد",
         "new_contract_title": "قرارداد جدید",
+        "contract_agreement": "قرارداد پیمانکار مستقل",
+        "download_template_desc": "قالب کامل قرارداد را به زبان دلخواه خود دانلود کنید",
+        "english_template": "قالب کامل توافق‌نامه",
+        "persian_template": "فارسی (Persian)",
+        "pashto_template": "پشتو",
+        "template_box_title": "قالب قرارداد",
+        "template_box_desc": "این قالب استاندارد قرارداد پیمانکار مستقل است. پس از ایجاد قرارداد، یک فایل PDF شخصی‌سازی شده با اطلاعات خود دریافت خواهید کرد.",
+        "termination": "فسخ",
         "email_address": "آدرس ایمیل",
         "phone_number": "شماره تلفن",
         "additional_message": "پیام یا متن اضافی"
@@ -179,7 +188,13 @@
         "termination_request": "درخواست فسخ",
         "partnership_agreement": "توافق‌نامه همکاری",
         "termination": "فسخ",
-        "partnership": "همکاری"
+        "partnership": "همکاری",
+        "request_termination": "درخواست فسخ",
+        "termination_desc": "آیا می‌خواهید به همکاری خود پایان دهید؟ می‌توانید در اینجا درخواست فسخ قرارداد دهید.",
+        "updates_regarding": "به‌روزرسانی‌ها درباره {{type}} شما",
+        "view_signed": "مشاهده قرارداد امضا شده",
+        "waiting_approval_upload": "در انتظار تأیید مدیر برای اپلود قرارداد امضا شده",
+        "upload_instruction": "لطفاً قرارداد را دانلود کنید، پرینت بگیرید، با جوهر امضا کنید، به وضوح اسکن یا عکس بگیرید، سپس در اینجا اپلود کنید."
     },
     "documents": {
         "upload_title": "اپلود اسناد",
@@ -286,6 +301,7 @@
         "all_status": "همه وضعیت‌ها",
         "no_documents": "سندی یافت نشد",
         "search_placeholder": "جستجو بر اساس نام فایل، کاربر، ایمیل...",
-        "search_contracts_placeholder": "جستجو با شناسه، نام، ایمیل..."
+        "search_contracts_placeholder": "جستجو با شناسه، نام، ایمیل...",
+        "selected": "انتخاب شده"
     }
 }

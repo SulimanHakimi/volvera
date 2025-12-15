@@ -65,6 +65,7 @@
         "channels_platforms": "Channels & Platforms",
         "platform": "Platform",
         "channel_link": "Channel Link",
+        "link_placeholder": "https://...",
         "add_another": "Add Another Account",
         "country": "Country",
         "phone": "Phone Number (Optional)",
@@ -132,7 +133,15 @@
         "new_contract_title": "New Contract",
         "email_address": "Email Address",
         "phone_number": "Phone Number",
-        "additional_message": "Additional Message / Context"
+        "additional_message": "Additional Message / Context",
+        "contract_agreement": "Independent Contractor Agreement",
+        "download_template_desc": "Download the full contract template in your preferred language",
+        "english_template": "Full agreement template",
+        "persian_template": "Persian (Farsi)",
+        "pashto_template": "Pashto",
+        "template_box_title": "Contract Template",
+        "template_box_desc": "This is the standard Independent Contractor Agreement template. Once you create a contract, you'll receive a personalized PDF with your information.",
+        "termination": "Termination"
     },
     "profile": {
         "title": "My Profile",
@@ -178,7 +187,13 @@
         "termination_request": "Termination Request",
         "partnership_agreement": "Partnership Agreement",
         "termination": "Termination",
-        "partnership": "Partnership"
+        "partnership": "Partnership",
+        "request_termination": "Request Termination",
+        "termination_desc": "Wish to end your partnership? You can request a contract termination here.",
+        "updates_regarding": "Updates regarding your {{type}}",
+        "view_signed": "View Signed Contract",
+        "waiting_approval_upload": "Waiting for admin approval to upload signed contract",
+        "upload_instruction": "Please download the contract, print it, sign it with ink, scan or photograph it clearly, then upload here."
     },
     "documents": {
         "upload_title": "Upload Documents",
@@ -285,6 +300,7 @@
         "all_status": "All Status",
         "no_documents": "No documents found",
         "search_placeholder": "Search by file name, user, email...",
-        "search_contracts_placeholder": "Search by ID, name, email..."
+        "search_contracts_placeholder": "Search by ID, name, email...",
+        "selected": "Selected"
     }
 }

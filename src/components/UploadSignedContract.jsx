@@ -36,7 +36,7 @@ export default function UploadSignedContract({ contractId, status, signedUrl }) 
             // Optional: refresh page or update parent state
             setTimeout(() => window.location.reload(), 2000);
         } catch (err) {
-            setError(err.response?.data?.error || 'Upload failed');
+            setError(err.response?.data?.error || t('common.error'));
         } finally {
             setUploading(false);
         }
@@ -50,7 +50,7 @@ export default function UploadSignedContract({ contractId, status, signedUrl }) 
                     <div>
                         <p className="font-semibold">{t('dashboard.contract_signed_uploaded')}</p>
                         <a href={signedUrl} target="_blank" className="text-sm underline hover:text-green-300">
-                            View Signed Contract
+                            {t('contract.view_signed')}
                         </a>
                     </div>
                 </div>
@@ -63,7 +63,7 @@ export default function UploadSignedContract({ contractId, status, signedUrl }) 
             <div className="card p-6 bg-yellow-500/10 border border-yellow-500/30">
                 <div className="flex items-center gap-3 text-yellow-400">
                     <FiAlertCircle className="w-6 h-6" />
-                    <p>Waiting for admin approval to upload signed contract</p>
+                    <p>{t('contract.waiting_approval_upload')}</p>
                 </div>
             </div>
         );
@@ -72,10 +72,10 @@ export default function UploadSignedContract({ contractId, status, signedUrl }) 
     return (
         <div className="card p-6 space-y-4">
             <h3 className="text-xl font-bold flex items-center gap-2">
-                <FiFileText /> Upload Signed Contract
+                <FiFileText /> {t('contract.upload_signed')}
             </h3>
             <p className="text-sm text-gray-400 text-[#9aa4b2]">
-                Please download the contract, print it, sign it with ink, scan or photograph it clearly, then upload here.
+                {t('contract.upload_instruction')}
             </p>
 
             <div className="space-y-4">
@@ -88,7 +88,7 @@ export default function UploadSignedContract({ contractId, status, signedUrl }) 
 
                 {file && (
                     <div className="text-sm text-gray-300">
-                        Selected: <span className="font-medium">{file.name}</span> ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                        {t('common.selected')}: <span className="font-medium">{file.name}</span> ({(file.size / 1024 / 1024).toFixed(2)} MB)
                     </div>
                 )}
 
@@ -112,11 +112,11 @@ export default function UploadSignedContract({ contractId, status, signedUrl }) 
                     {uploading ? (
                         <div className="flex items-center gap-2">
                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            Uploading...
+                            {t('documents.uploading')}
                         </div>
                     ) : (
                         <>
-                            <FiUpload /> Upload Signed Contract
+                            <FiUpload /> {t('contract.upload_signed')}
                         </>
                     )}
                 </button>

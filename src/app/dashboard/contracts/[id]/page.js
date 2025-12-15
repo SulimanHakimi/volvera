@@ -131,17 +131,17 @@ export default function ContractDetailsPage({ params }) {
                     <div className="p-1.5 rounded-lg bg-white/5 group-hover:bg-[#06b6d4] group-hover:text-white transition-all">
                         <FiArrowLeft />
                     </div>
-                    Back to Dashboard
+                    {t('contract.back_to_dashboard')}
                 </button>
 
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-8">
                     <div>
                         <h1 className="text-3xl font-bold text-white mb-2">
-                            {isTermination ? 'Termination Request' : 'Contract Details'}
+                            {isTermination ? t('contract.termination_request') : t('contract.contract_details')}
                         </h1>
                         <div className="flex items-center gap-2 text-[#9aa4b2] text-sm">
-                            <span>Reference ID:</span>
+                            <span>{t('contract.reference_id')}:</span>
                             <span className="font-mono text-white/70 tracking-wide bg-white/5 px-2 py-0.5 rounded border border-white/5">
                                 #{contract.contractNumber}
                             </span>
@@ -155,7 +155,7 @@ export default function ContractDetailsPage({ params }) {
                         <div>
                             <h2 className="text-xl font-bold mb-1">{t('dashboard.current_status')}</h2>
                             <div className="flex items-center gap-2 text-gray-400">
-                                Updates regarding your {isTermination ? 'termination request' : 'partnership'}
+                                {t('contract.updates_regarding', { type: isTermination ? t('contract.termination_request') : t('contract.partnership') })}
                             </div>
                         </div>
                         <div className={`px-4 py-2 rounded-lg border flex items-center gap-2 font-bold uppercase tracking-wider
@@ -166,7 +166,7 @@ export default function ContractDetailsPage({ params }) {
                     `}>
                             {contract.status === 'approved' ? <FiCheckCircle /> :
                                 contract.status === 'rejected' ? <FiXCircle /> : <FiClock />}
-                            {contract.status.replace('_', ' ')}
+                            {t('contract.' + contract.status)}
                         </div>
                     </div>
 
@@ -177,26 +177,26 @@ export default function ContractDetailsPage({ params }) {
                                 <h3 className="text-lg font-bold mb-4 border-b border-white/10 pb-4">{t('dashboard.personal_information')}</h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                                     <div>
-                                        <label className="text-gray-400 block mb-1">{t('dashboard.full_name')}</label>
+                                        <label className="text-gray-400 block mb-1">{t('apply_form.full_name')}</label>
                                         <div className="font-medium">{contract.originalData.fullName}</div>
                                     </div>
                                     <div>
-                                        <label className="text-gray-400 block mb-1">Email</label>
+                                        <label className="text-gray-400 block mb-1">{t('apply_form.email')}</label>
                                         <div className="font-medium">{contract.originalData.email}</div>
                                     </div>
                                     <div>
-                                        <label className="text-gray-400 block mb-1">Phone</label>
+                                        <label className="text-gray-400 block mb-1">{t('apply_form.phone')}</label>
                                         <div className="font-medium">{contract.originalData.phone}</div>
                                     </div>
                                     <div>
-                                        <label className="text-gray-400 block mb-1">Country</label>
+                                        <label className="text-gray-400 block mb-1">{t('apply_form.country')}</label>
                                         <div className="font-medium">{contract.originalData.country}</div>
                                     </div>
                                 </div>
                             </section>
 
                             <section className="card p-6">
-                                <h3 className="text-lg font-bold mb-4 border-b border-white/10 pb-4">Platforms</h3>
+                                <h3 className="text-lg font-bold mb-4 border-b border-white/10 pb-4">{t('apply_form.channels_platforms')}</h3>
                                 <div className="space-y-4">
                                     {contract.originalData.platforms.map((p, i) => (
                                         <div key={i} className="flex items-center justify-between bg-white/5 p-3 rounded-lg">
@@ -221,7 +221,7 @@ export default function ContractDetailsPage({ params }) {
                                         className="btn btn-secondary w-full justify-center flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {downloadingLang === 'en' ? <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div> : <FiDownload />}
-                                        {downloadingLang === 'en' ? 'Downloading...' : 'Download (English)'}
+                                        {downloadingLang === 'en' ? t('common.loading') : `${t('contract.download_pdf')} (English)`}
                                     </button>
                                     <button
                                         onClick={() => handleDownload('fa')}
@@ -229,7 +229,7 @@ export default function ContractDetailsPage({ params }) {
                                         className="btn btn-secondary w-full justify-center flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {downloadingLang === 'fa' ? <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div> : <FiDownload />}
-                                        {downloadingLang === 'fa' ? 'Downloading...' : 'Download (Persian)'}
+                                        {downloadingLang === 'fa' ? t('common.loading') : `${t('contract.download_pdf')} (${t('dashboard.persian')})`}
                                     </button>
                                     <button
                                         onClick={() => handleDownload('ps')}
@@ -237,11 +237,11 @@ export default function ContractDetailsPage({ params }) {
                                         className="btn btn-secondary w-full justify-center flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {downloadingLang === 'ps' ? <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div> : <FiDownload />}
-                                        {downloadingLang === 'ps' ? 'Downloading...' : 'Download (Pashto)'}
+                                        {downloadingLang === 'ps' ? t('common.loading') : `${t('contract.download_pdf')} (${t('dashboard.pashto')})`}
                                     </button>
                                 </div>
                                 <p className="text-xs text-gray-400 text-center mt-3">
-                                    Generated on {new Date(contract.createdAt).toLocaleDateString()}
+                                    {t('contract.created_on')} {new Date(contract.createdAt).toLocaleDateString()}
                                 </p>
                             </div>
 
@@ -258,10 +258,10 @@ export default function ContractDetailsPage({ params }) {
                             {isPartnership && contract.status === 'approved' && (
                                 <div className="card p-6 border-red-500/20 bg-red-500/5">
                                     <h3 className="font-bold text-red-400 mb-2 flex items-center gap-2">
-                                        <FiAlertCircle /> Termination
+                                        <FiAlertCircle /> {t('contract.termination')}
                                     </h3>
                                     <p className="text-sm text-gray-400 mb-4">
-                                        Wish to end your partnership? You can request a contract termination here.
+                                        {t('contract.termination_desc')}
                                     </p>
                                     <button
                                         onClick={handleRequestTermination}
@@ -271,9 +271,9 @@ export default function ContractDetailsPage({ params }) {
                                         {terminationLoading ? (
                                             <div className="flex items-center justify-center gap-2">
                                                 <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin"></div>
-                                                Requesting...
+                                                {t('apply_form.submitting')}
                                             </div>
-                                        ) : 'Request Termination'}
+                                        ) : t('contract.request_termination')}
                                     </button>
                                 </div>
                             )}

@@ -58,7 +58,6 @@ export default function ApplyFormModal({ isOpen, onClose, onSuccess }) {
 
         try {
             const payload = {
-                originalLanguage: formData.language === 'en' ? 'fa' : formData.language, // Fallback 'en' to 'fa' for now as DB only supports fa/ps, or maybe allow en? Let's just map for safety or let it pass if model updated. I'll map 'en' -> 'fa' if validation is strict, but better to just send. Actually, let's map platforms correctly.
                 originalLanguage: formData.language,
                 fullName: formData.fullName,
                 email: formData.email,
@@ -194,7 +193,7 @@ export default function ApplyFormModal({ isOpen, onClose, onSuccess }) {
                                                                 className="input text-sm"
                                                                 value={item.link}
                                                                 onChange={(e) => handlePlatformChange(index, 'link', e.target.value)}
-                                                                placeholder={t('apply_form.message_placeholder')}
+                                                                placeholder={t('apply_form.link_placeholder')}
                                                                 required
                                                             />
                                                         </div>
