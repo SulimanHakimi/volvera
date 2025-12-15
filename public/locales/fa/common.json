@@ -174,11 +174,17 @@
         "rejected": "رد شده",
         "active": "فعال",
         "signed": "امضا شده",
-        "terminated": "خاتمه یافته"
+        "terminated": "خاتمه یافته",
+        "preview": "پیش‌نمایش قرارداد",
+        "termination_request": "درخواست فسخ",
+        "partnership_agreement": "توافق‌نامه همکاری",
+        "termination": "فسخ",
+        "partnership": "همکاری"
     },
     "documents": {
         "upload_title": "اپلود اسناد",
         "category": "دسته‌بندی سند",
+        "contract": "قرارداد",
         "identity": "سند شناسایی (تذکره یا پاسپورت)",
         "channel_proof": "اثبات کانال (اسکرین‌شات، تحلیل‌ها)",
         "other": "سایر",
@@ -233,7 +239,9 @@
         "maintenance_mode": "حالت تعمیر و نگهداری",
         "maintenance_desc": "دسترسی به سایت را برای غیر مدیران غیرفعال می‌کند",
         "save_changes": "ذخیره تغییرات",
-        "saving": "در حال ذخیره..."
+        "saving": "در حال ذخیره...",
+        "contracts_subtitle": "بررسی، تأیید یا رد درخواست‌های سازندگان محتوا",
+        "no_contracts": "هیچ قراردادی یافت نشد"
     },
     "notifications": {
         "title": "اعلان‌ها",
@@ -277,6 +285,7 @@
         "uploaded": "بارگذاری شده",
         "all_status": "همه وضعیت‌ها",
         "no_documents": "سندی یافت نشد",
-        "search_placeholder": "جستجو بر اساس نام فایل، کاربر، ایمیل..."
+        "search_placeholder": "جستجو بر اساس نام فایل، کاربر، ایمیل...",
+        "search_contracts_placeholder": "جستجو با شناسه، نام، ایمیل..."
     }
 }

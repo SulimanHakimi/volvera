@@ -173,12 +173,17 @@
         "approved": "Approved",
         "rejected": "Rejected",
         "active": "Active",
-        "signed": "Signed",
-        "terminated": "Terminated"
+        "terminated": "Terminated",
+        "preview": "Contract Preview",
+        "termination_request": "Termination Request",
+        "partnership_agreement": "Partnership Agreement",
+        "termination": "Termination",
+        "partnership": "Partnership"
     },
     "documents": {
         "upload_title": "Upload Documents",
         "category": "Document Category",
+        "contract": "Contract",
         "identity": "Identity Document (ID, Passport)",
         "channel_proof": "Channel Proof (Screenshot, Analytics)",
         "other": "Other",
@@ -233,7 +238,9 @@
         "maintenance_mode": "Maintenance Mode",
         "maintenance_desc": "Disables site access for non-admins",
         "save_changes": "Save Changes",
-        "saving": "Saving..."
+        "saving": "Saving...",
+        "contracts_subtitle": "Review, approve, or reject creator applications",
+        "no_contracts": "No contracts found"
     },
     "notifications": {
         "title": "Notifications",
@@ -277,6 +284,7 @@
         "uploaded": "Uploaded",
         "all_status": "All Status",
         "no_documents": "No documents found",
-        "search_placeholder": "Search by file name, user, email..."
+        "search_placeholder": "Search by file name, user, email...",
+        "search_contracts_placeholder": "Search by ID, name, email..."
     }
 }

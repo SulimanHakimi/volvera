@@ -174,11 +174,17 @@
         "rejected": "رد شوی",
         "active": "فعال",
         "signed": "لاسلیک شوی",
-        "terminated": "پای ته رسیدلی"
+        "terminated": "پای ته رسیدلی",
+        "preview": "د قرارداد مخکتنه",
+        "termination_request": "د لغوه کولو غوښتنه",
+        "partnership_agreement": "د شراکت تړون",
+        "termination": "لغوه کول",
+        "partnership": "شراکت"
     },
     "documents": {
         "upload_title": "د اسنادو پورته کول",
         "category": "د سند کټګوري",
+        "contract": "قرارداد",
         "identity": "د پیژندنې سند (پیژندپاڼه، پاسپورټ)",
         "channel_proof": "د چینل ثبوت (سکرین شاټ، تحلیلونه)",
         "other": "نور",
@@ -233,7 +239,9 @@
         "maintenance_mode": "د ساتنې حالت",
         "maintenance_desc": "د غیر اډمینانو لپاره د سایټ لاسرسی غیر فعالوي",
         "save_changes": "بدلونونه خوندي کړئ",
-        "saving": "خوندي کول..."
+        "saving": "خوندي کول...",
+        "contracts_subtitle": "د منځپانګه جوړونکو غوښتنلیکونه بیاکتنه، تایید یا رد کړئ",
+        "no_contracts": "هیڅ قرارداد ونه موندل شو"
     },
     "notifications": {
         "title": "خبرتیاوې",
@@ -277,6 +285,7 @@
         "uploaded": "پورته شوی",
         "all_status": "ټول حالتونه",
         "no_documents": "هیڅ سند ونه موندل شو",
-        "search_placeholder": "د فایل نوم، کاروونکي، بریښنالیک له مخې لټون..."
+        "search_placeholder": "د فایل نوم، کاروونکي، بریښنالیک له مخې لټون...",
+        "search_contracts_placeholder": "د آی ډي، نوم، بریښنالیک له لارې لټون..."
     }
 }

@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { FiMail, FiMapPin, FiArrowRight, FiPhone } from 'react-icons/fi';
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaYoutube, FaInstagram, FaHeart, FaTiktok } from 'react-icons/fa';
 import Image from 'next/image';
 import axios from 'axios';
 
 export default function Footer() {
+    const { t, i18n } = useTranslation();
     const currentYear = new Date().getFullYear();
     const [settings, setSettings] = useState({});
 

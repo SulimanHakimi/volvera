@@ -12,16 +12,18 @@ import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import NotificationDropdown from './NotificationDropdown';
+import axios from 'axios';
 
 export default function Header() {
     const pathname = usePathname();
     const router = useRouter(); // Initialize router here
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const { currentLanguage, changeLanguage } = useLanguage();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [langMenuOpen, setLangMenuOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
+    const [settings, setSettings] = useState({});
 
     const { data: session } = useSession();
     const [localUser, setLocalUser] = useState(null);
@@ -49,6 +51,16 @@ export default function Header() {
         // Listen for login/logout events
         window.addEventListener('user-auth-change', checkUser);
         window.addEventListener('storage', checkUser);
+        // Fetch settings
+        const fetchSettings = async () => {
+            try {
+                const res = await axios.get('/api/settings/public');
+                setSettings(res.data || {});
+            } catch (error) {
+                console.error('Failed to fetch header settings');
+            }
+        };
+        fetchSettings();
 
         return () => {
             window.removeEventListener('user-auth-change', checkUser);
@@ -83,6 +95,8 @@ export default function Header() {
     ];
 
     const currentLang = languages.find(l => l.code === currentLanguage);
+    const contactEmail = settings.contactEmail || 'nor.volvera@gmail.com';
+    const companyAddress = settings.companyAddress || 'Stockholm, Sweden';
 
     return (
         <header className="sticky top-0 left-0 right-0 z-50 bg-[#0f1724]/95 backdrop-blur-2xl border-b border-[rgba(255,255,255,0.03)]">
@@ -430,8 +444,8 @@ export default function Header() {
                                                     <div className="w-8 h-8 rounded-lg bg-[rgba(255,255,255,0.03)] flex items-center justify-center flex-shrink-0 border border-[rgba(255,255,255,0.03)]">
                                                         <FiMail className="w-4 h-4 text-[#06b6d4]" />
                                                     </div>
-                                                    <a href="mailto:nor.volvera@gmail.com" className="text-sm text-[#9aa4b2] hover:text-[#06b6d4] transition-colors truncate">
-                                                        nor.volvera@gmail.com
+                                                    <a href={`mailto:${contactEmail}`} className="text-sm text-[#9aa4b2] hover:text-[#06b6d4] transition-colors truncate">
+                                                        {contactEmail}
                                                     </a>
                                                 </li>
                                                 <li className="flex items-center gap-3">
@@ -446,7 +460,7 @@ export default function Header() {
                                                     <div className="w-8 h-8 rounded-lg bg-[rgba(255,255,255,0.03)] flex items-center justify-center flex-shrink-0 border border-[rgba(255,255,255,0.03)]">
                                                         <FiMapPin className="w-4 h-4 text-[#06b6d4]" />
                                                     </div>
-                                                    <span className="text-sm text-[#9aa4b2]">Stockholm, Sweden</span>
+                                                    <span className="text-sm text-[#9aa4b2]">{companyAddress}</span>
                                                 </li>
                                             </ul>
                                         </div>
