@@ -20,6 +20,7 @@ export default function ContractsPage() {
     const [pdfUrl, setPdfUrl] = useState(null);
     const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
     const [pdfLoading, setPdfLoading] = useState(false);
+    const [pdfError, setPdfError] = useState(null);
 
     useEffect(() => {
         fetchContracts();
@@ -55,19 +56,22 @@ export default function ContractsPage() {
 
     const handleViewPdf = async (contract) => {
         setPdfLoading(true);
+        setPdfError(null);
+        setPdfUrl(null);
         setIsPdfModalOpen(true);
         try {
             const token = localStorage.getItem('accessToken');
-            const response = await axios.get(`/api/contracts/${contract._id}/pdf`, {
+            const response = await axios.get(`/api/contracts/${contract._id}/pdf?lang=en`, {
                 headers: { Authorization: `Bearer ${token}` },
                 responseType: 'blob'
             });
 
             const blob = new Blob([response.data], { type: 'application/pdf' });
             const url = window.URL.createObjectURL(blob);
-                setPdfUrl(url);
+            setPdfUrl(url);
         } catch (error) {
-            setIsPdfModalOpen(false);
+            console.error(error);
+            setPdfError('Failed to generate PDF preview. ' + (error.message || ''));
         } finally {
             setPdfLoading(false);
         }
@@ -85,12 +89,14 @@ export default function ContractsPage() {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `VOLVERA_Contract_${contract._id}_${lang}.pdf`);
+            link.setAttribute('download', `VOLVERA_${contract.type || 'Contract'}_${contract.contractNumber || contract._id}_${lang}.pdf`);
             document.body.appendChild(link);
             link.click();
             link.remove();
         } catch (error) {
-            alert('Failed to download PDF');
+            console.error(error);
+            const msg = error.response?.status === 500 ? 'Server error generating PDF' : 'Failed to download PDF';
+            alert(`${msg}. Please try again.`);
         } finally {
             setDownloadingFile(null);
         }
@@ -235,7 +241,7 @@ export default function ContractsPage() {
                                             {contract.type === 'termination' ? 'Termination' : 'Partnership'}
                                         </span>
                                     </div>
-                                        <p className="text-sm text-gray-400 mt-1">
+                                    <p className="text-sm text-gray-400 mt-1">
                                         ID: <span className="text-[var(--accent)] font-semibold">{contract.contractNumber || contract._id.slice(-8)}</span> •
                                         Submitted {new Date(contract.createdAt).toLocaleDateString()}
                                     </p>
@@ -247,19 +253,6 @@ export default function ContractsPage() {
                                         <div>
                                             <span className="text-gray-400">Email:</span>{' '}
                                             <span className="text-[var(--accent)]">{contract.user?.email}</span>
-                                        </div>
-                                        <div>
-                                            <span className="text-gray-400">Language:</span>{' '}
-                                            <span className="text-white">
-                                                {contract.originalLanguage === 'fa' ? 'فارسی' :
-                                                    contract.originalLanguage === 'ps' ? 'پښتو' : 'English'}
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <span className="text-gray-400">Type:</span>{' '}
-                                            <span className={`px-2 py-1 rounded-md text-xs font-medium ${contract.type === 'termination' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-green-500/10 text-green-400 border-green-500/20'}`}>
-                                                {contract.type === 'termination' ? 'Termination' : 'Partnership'}
-                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -276,7 +269,7 @@ export default function ContractsPage() {
                                 <div className="flex gap-3">
                                     {/* View PDF */}
                                     <button
-                                    onClick={() => handleViewPdf(contract)}
+                                        onClick={() => handleViewPdf(contract)}
                                         className="btn btn-secondary p-3 hover:bg-[var(--accent)]/10 transition-all"
                                         title="View Contract PDF"
                                     >
@@ -365,40 +358,51 @@ export default function ContractsPage() {
                     <motion.div
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="relative bg-gray-900 rounded-2xl shadow-2xl w-full max-w-5xl h-[90vh] border border-purple-500/30"
+                        className="relative bg-gray-900 rounded-2xl shadow-2xl w-full max-w-5xl h-[90vh] border border-purple-500/30 flex flex-col"
                     >
                         <button
                             onClick={() => {
                                 setIsPdfModalOpen(false);
                                 setPdfUrl(null);
                             }}
-                            className="absolute top-4 right-4 z-10 w-12 h-12 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-all"
+                            className="absolute top-4 right-4 z-10 w-12 h-12 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-all border border-white/10"
                         >
                             <FiClose className="w-7 h-7 text-white" />
                         </button>
 
-                        <div className="h-full flex flex-col">
-                            <div className="px-6 py-4 border-b border-purple-500/30">
-                                <h2 className="text-2xl font-bold text-white">Contract Preview</h2>
-                            </div>
+                        <div className="px-6 py-4 border-b border-purple-500/30 bg-gray-900 rounded-t-2xl">
+                            <h2 className="text-2xl font-bold text-white">Contract Preview</h2>
+                        </div>
 
-                            <div className="flex-1 overflow-hidden bg-gray-800">
-                                {pdfLoading ? (
-                                    <div className="h-full flex items-center justify-center">
+                        <div className="flex-1 overflow-hidden bg-gray-800 rounded-b-2xl relative">
+                            {pdfLoading ? (
+                                <div className="absolute inset-0 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm z-20">
+                                    <div className="flex flex-col items-center gap-4">
                                         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-500"></div>
+                                        <p className="text-white">Generating PDF...</p>
                                     </div>
-                                ) : pdfUrl ? (
-                                    <iframe
-                                        src={pdfUrl}
-                                        className="w-full h-full border-0"
-                                        title="Contract PDF"
-                                    />
-                                ) : (
-                                    <div className="h-full flex items-center justify-center text-gray-400">
-                                        Failed to load PDF
+                                </div>
+                            ) : pdfError ? (
+                                <div className="h-full flex flex-col items-center justify-center text-red-400 gap-4 p-8 text-center">
+                                    <FiAlertCircle className="w-16 h-16" />
+                                    <div>
+                                        <p className="text-xl font-bold">Failed to load preview</p>
+                                        <p className="text-sm mt-2">{pdfError}</p>
                                     </div>
-                                )}
-                            </div>
+                                    <button
+                                        onClick={() => setIsPdfModalOpen(false)}
+                                        className="btn btn-primary mt-4"
+                                    >
+                                        Close
+                                    </button>
+                                </div>
+                            ) : pdfUrl ? (
+                                <iframe
+                                    src={pdfUrl}
+                                    className="w-full h-full border-0 rounded-b-2xl"
+                                    title="Contract PDF"
+                                />
+                            ) : null}
                         </div>
                     </motion.div>
                 </div>
