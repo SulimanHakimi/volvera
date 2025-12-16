@@ -7,12 +7,23 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ApplyFormModal from '@/components/forms/ApplyFormModal';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
   const { t, i18n } = useTranslation();
+  const router = useRouter();
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [formStatus, setFormStatus] = useState('');
   const [publicSettings, setPublicSettings] = useState({});
+
+  const handleOpenApplyModal = () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+    setIsApplyModalOpen(true);
+  };
 
   const handleInlineSubmit = (e) => {
     e.preventDefault();
@@ -179,7 +190,7 @@ export default function HomePage() {
 
             <div className="flex gap-3 justify-center">
               <button
-                onClick={() => setIsApplyModalOpen(true)}
+                onClick={handleOpenApplyModal}
                 className="btn-custom"
               >
                 {t('hero.cta_primary')}

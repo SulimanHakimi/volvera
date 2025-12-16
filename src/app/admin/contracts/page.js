@@ -255,6 +255,12 @@ export default function ContractsPage() {
                                             <span className="text-[var(--accent)]">{contract.user?.email}</span>
                                         </div>
                                     </div>
+                                    {contract.originalData?.message && (
+                                        <div className="mt-3 p-3 bg-white/5 rounded-lg border border-white/10">
+                                            <span className="text-gray-400 text-xs block mb-1">Channel Message:</span>
+                                            <p className="text-sm text-gray-300 italic">"{contract.originalData.message}"</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
