@@ -275,38 +275,38 @@ export default function DashboardPage() {
                                 </button>
                             </div>
                         ) : (
-                            <div className="h-fit">
+                            <div className="h-fit overflow-x-auto">
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b border-white/10">
-                                            <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400">{t('dashboard.contract_number')}</th>
-                                            <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400">{t('dashboard.language')}</th>
-                                            <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400">{t('dashboard.status')}</th>
-                                            <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400">{t('dashboard.date')}</th>
-                                            <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400">{t('dashboard.actions')}</th>
+                                            <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400 whitespace-nowrap">{t('dashboard.contract_number')}</th>
+                                            <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400 whitespace-nowrap">{t('dashboard.language')}</th>
+                                            <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400 whitespace-nowrap">{t('dashboard.status')}</th>
+                                            <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400 whitespace-nowrap">{t('dashboard.date')}</th>
+                                            <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400 whitespace-nowrap">{t('dashboard.actions')}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {contracts.map((contract) => (
                                             <tr key={contract._id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                                                <td className="py-4 px-4 font-mono text-sm">
+                                                <td className="py-4 px-4 font-mono text-sm whitespace-nowrap">
                                                     <div>{contract.contractNumber}</div>
                                                     {contract.type === 'termination' && (
                                                         <span className="text-[10px] uppercase tracking-wider text-red-400 font-bold">{t('dashboard.termination')}</span>
                                                     )}
                                                 </td>
-                                                <td className="py-4 px-4 text-sm">
+                                                <td className="py-4 px-4 text-sm whitespace-nowrap">
                                                     {contract.originalLanguage === 'fa' ? t('dashboard.persian') : contract.originalLanguage === 'ps' ? t('dashboard.pashto') : 'English'}
                                                 </td>
-                                                <td className="py-4 px-4">
+                                                <td className="py-4 px-4 whitespace-nowrap">
                                                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(contract.status)}`}>
                                                         {t('contract.' + contract.status)}
                                                     </span>
                                                 </td>
-                                                <td className="py-4 px-4 text-sm text-gray-400">
+                                                <td className="py-4 px-4 text-sm text-gray-400 whitespace-nowrap">
                                                     {new Date(contract.createdAt).toLocaleDateString()}
                                                 </td>
-                                                <td className="py-4 px-4">
+                                                <td className="py-4 px-4 whitespace-nowrap">
                                                     <div className="flex items-center gap-2">
                                                         <Link href={`/dashboard/contracts/${contract._id}`} className="text-purple-400 hover:text-purple-300 text-sm font-medium transition-colors">
                                                             {t('dashboard.view_details')}
