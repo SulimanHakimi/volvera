@@ -17,6 +17,9 @@ export const metadata = {
   description: "Join thousands of creators who trust VOLVERA for growth, support, and maximum earnings retention. Partner with us and keep 99.5% of your revenue.",
   keywords: "volvera, Volvera, youtube partnership, content creator, earnings, monetization",
   authors: [{ name: "VOLVERA" }],
+  verification: {
+    google: "nw_uPLx0Y1jKy4O1TETf8n7bS-AywSpEyOHnFEM-6JA",
+  },
   openGraph: {
     title: "VOLVERA - Keep 99.5% of Your Earnings",
     description: "Join thousands of creators who trust VOLVERA for growth, support, and maximum earnings retention.",
