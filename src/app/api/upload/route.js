@@ -25,14 +25,15 @@ export async function POST(request) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
-        // Generate a unique filename to prevent overwriting
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const extension = file.name.split('.').pop();
-        const blobName = `uploads/${file.name.split('.')[0]}-${uniqueSuffix}.${extension}`;
+        // Generate a strictly unique and unguessable filename
+        const crypto = require('crypto');
+        const fileExtension = file.name.split('.').pop();
+        const randomName = crypto.randomUUID();
+        const blobName = `uploads/${randomName}.${fileExtension}`;
 
         // Upload to Vercel Blob
         const blob = await put(blobName, file, {
-            access: 'public',
+            access: 'public', // URLs are unguessable, but technically public
         });
 
         await connectDB();
@@ -40,7 +41,7 @@ export async function POST(request) {
         // Save file record to DB
         const newFile = new File({
             user: decoded.id,
-            filename: blob.pathname,
+            filename: blobName,
             originalName: file.name,
             mimeType: file.type,
             size: file.size,
@@ -51,14 +52,24 @@ export async function POST(request) {
 
         await newFile.save();
 
+        // Return sanitized file info
+        const safeFile = {
+            _id: newFile._id,
+            originalName: newFile.originalName,
+            mimeType: newFile.mimeType,
+            size: newFile.size,
+            path: newFile.path,
+            createdAt: newFile.createdAt
+        };
+
         return NextResponse.json({
             message: 'File uploaded successfully',
-            file: newFile
+            file: safeFile
         }, { status: 201 });
 
     } catch (error) {
         console.error('Upload error:', error);
-        return NextResponse.json({ error: 'Upload failed: ' + error.message }, { status: 500 });
+        return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
     }
 }
 
