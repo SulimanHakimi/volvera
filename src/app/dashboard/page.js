@@ -19,6 +19,7 @@ export default function DashboardPage() {
     const [contracts, setContracts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+    const [publicSettings, setPublicSettings] = useState({});
 
     const { data: session, status } = useSession();
     useEffect(() => {
@@ -28,6 +29,18 @@ export default function DashboardPage() {
             localStorage.setItem('user', JSON.stringify(session.user));
         }
     }, [session, status]);
+    useEffect(() => {
+        const fetchPublicSettings = async () => {
+            try {
+                const res = await axios.get('/api/settings/public');
+                setPublicSettings(res.data || {});
+            } catch (err) {
+                console.error('Failed to load public settings', err);
+            }
+        };
+        fetchPublicSettings();
+    }, []);
+
     useEffect(() => {
         const checkAuth = async () => {
             if (status === 'loading') return;
@@ -193,7 +206,7 @@ export default function DashboardPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <a
-                                href="/api/contract-template?lang=en"
+                                href={publicSettings.agreementFile_en || "/api/contract-template?lang=en"}
                                 target="_blank"
                                 className="group relative overflow-hidden p-6 rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent hover:from-purple-500/10 hover:border-purple-500/30 transition-all"
                             >
@@ -208,7 +221,7 @@ export default function DashboardPage() {
                             </a>
 
                             <a
-                                href="/api/contract-template?lang=fa"
+                                href={publicSettings.agreementFile_fa || "/api/contract-template?lang=fa"}
                                 target="_blank"
                                 className="group relative overflow-hidden p-6 rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent hover:from-cyan-500/10 hover:border-cyan-500/30 transition-all"
                             >
@@ -223,7 +236,7 @@ export default function DashboardPage() {
                             </a>
 
                             <a
-                                href="/api/contract-template?lang=ps"
+                                href={publicSettings.agreementFile_ps || "/api/contract-template?lang=ps"}
                                 target="_blank"
                                 className="group relative overflow-hidden p-6 rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent hover:from-green-500/10 hover:border-green-500/30 transition-all"
                             >

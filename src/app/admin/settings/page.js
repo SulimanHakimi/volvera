@@ -29,10 +29,18 @@ export default function SettingsPage() {
         partnershipAgreement_ps: '',
         terminationNotice_en: '',
         terminationNotice_fa: '',
-        terminationNotice_ps: ''
+        terminationNotice_ps: '',
+        agreementFile_en: '',
+        agreementFile_fa: '',
+        agreementFile_ps: ''
     });
     const [signatureFile, setSignatureFile] = useState(null);
     const [signaturePreview, setSignaturePreview] = useState(null);
+    const [agreementFiles, setAgreementFiles] = useState({
+        en: null,
+        fa: null,
+        ps: null
+    });
 
     useEffect(() => {
         const fetchSettings = async () => {
@@ -81,6 +89,13 @@ export default function SettingsPage() {
         }));
     };
 
+    const handleAgreementFileChange = (lang, e) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            setAgreementFiles(prev => ({ ...prev, [lang]: file }));
+        }
+    };
+
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
@@ -115,16 +130,32 @@ export default function SettingsPage() {
                 }
             }
 
-            const settingsToSave = {
-                ...settings,
-                companySignatureUrl: signatureUrl
-            };
+            // Upload agreement templates
+            let newSettings = { ...settings, companySignatureUrl: signatureUrl };
 
-            await axios.post('/api/admin/settings', settingsToSave, {
+            for (const lang of ['en', 'fa', 'ps']) {
+                if (agreementFiles[lang]) {
+                    const formData = new FormData();
+                    formData.append('file', agreementFiles[lang]);
+                    const uploadRes = await axios.post('/api/upload', formData, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+                    if (uploadRes.data?.file?.path) {
+                        newSettings[`agreementFile_${lang}`] = uploadRes.data.file.path;
+                    }
+                }
+            }
+
+            await axios.post('/api/admin/settings', newSettings, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
             setSignatureFile(null);
+            setAgreementFiles({ en: null, fa: null, ps: null });
+            setSettings(newSettings);
         } catch (error) {
             console.error(error);
             alert('Failed to save settings: ' + (error.response?.data?.error || error.message));
@@ -136,7 +167,8 @@ export default function SettingsPage() {
     const tabs = [
         { id: 'general', label: 'General Settings' },
         { id: 'partnership', label: 'Partnership Agreement' },
-        { id: 'termination', label: 'Termination Notice' }
+        { id: 'termination', label: 'Termination Notice' },
+        { id: 'templates', label: 'Agreement Templates (PDF/DOC)' }
     ];
 
     return (
@@ -153,8 +185,8 @@ export default function SettingsPage() {
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={`pb-3 px-1 text-sm font-medium transition-all relative ${activeTab === tab.id
-                                ? 'text-[var(--accent)]'
-                                : 'text-gray-400 hover:text-white'
+                            ? 'text-[var(--accent)]'
+                            : 'text-gray-400 hover:text-white'
                             }`}
                     >
                         {tab.label}
@@ -477,6 +509,55 @@ export default function SettingsPage() {
                                         onChange={handleChange}
                                     />
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'templates' && (
+                    <div className="space-y-6 animate-fadeIn">
+                        <div className="card p-6 space-y-6">
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+                                    <FiUpload className="w-5 h-5" />
+                                </div>
+                                <div>
+                                    <h2 className="text-lg font-semibold">Agreement Templates for Download</h2>
+                                    <p className="text-sm text-gray-400">Upload the files (PDF/DOC) that clients will download and fill.</p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                {['en', 'fa', 'ps'].map((lang) => (
+                                    <div key={lang} className="space-y-3">
+                                        <label className="label capitalize">{lang === 'en' ? 'English' : lang === 'fa' ? 'Persian (فارسی)' : 'Pashto (پښتو)'} Template</label>
+                                        <div className="relative">
+                                            <input
+                                                type="file"
+                                                onChange={(e) => handleAgreementFileChange(lang, e)}
+                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                            />
+                                            <div className="input flex items-center gap-2 text-gray-400 overflow-hidden">
+                                                <FiUpload className="flex-shrink-0" />
+                                                <span className="truncate">
+                                                    {agreementFiles[lang] ? agreementFiles[lang].name : 'Choose file...'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        {settings[`agreementFile_${lang}`] && (
+                                            <div className="flex items-center gap-2 p-3 rounded-lg bg-white/5 border border-white/10 overflow-hidden">
+                                                <FiFileText className="text-blue-400 flex-shrink-0" />
+                                                <a
+                                                    href={settings[`agreementFile_${lang}`]}
+                                                    target="_blank"
+                                                    className="text-xs text-blue-400 hover:underline truncate"
+                                                >
+                                                    Current {lang.toUpperCase()} Template
+                                                </a>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>

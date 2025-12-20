@@ -15,6 +15,19 @@ export default function ContractDetailsPage({ params }) {
     const [loading, setLoading] = useState(true);
     const [terminationLoading, setTerminationLoading] = useState(false);
     const [downloadingLang, setDownloadingLang] = useState(null);
+    const [publicSettings, setPublicSettings] = useState({});
+
+    useEffect(() => {
+        const fetchPublicSettings = async () => {
+            try {
+                const res = await axios.get('/api/settings/public');
+                setPublicSettings(res.data || {});
+            } catch (err) {
+                console.error('Failed to load public settings', err);
+            }
+        };
+        fetchPublicSettings();
+    }, []);
 
     useEffect(() => {
         const fetchContract = async () => {
@@ -240,6 +253,30 @@ export default function ContractDetailsPage({ params }) {
                                         {downloadingLang === 'ps' ? t('common.loading') : `${t('contract.download_pdf')} (${t('dashboard.pashto')})`}
                                     </button>
                                 </div>
+
+                                {(publicSettings.agreementFile_en || publicSettings.agreementFile_fa || publicSettings.agreementFile_ps) && (
+                                    <div className="mt-6 pt-6 border-t border-white/10">
+                                        <h3 className="font-bold mb-3 text-sm text-[#06b6d4]">Static Templates (Download/Fill/Upload)</h3>
+                                        <div className="space-y-2">
+                                            {publicSettings.agreementFile_en && (
+                                                <a href={publicSettings.agreementFile_en} target="_blank" className="flex items-center gap-2 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all text-xs border border-white/5">
+                                                    <FiDownload className="text-gray-400" /> English Template
+                                                </a>
+                                            )}
+                                            {publicSettings.agreementFile_fa && (
+                                                <a href={publicSettings.agreementFile_fa} target="_blank" className="flex items-center gap-2 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all text-xs border border-white/5">
+                                                    <FiDownload className="text-gray-400" /> {t('dashboard.persian')} Template
+                                                </a>
+                                            )}
+                                            {publicSettings.agreementFile_ps && (
+                                                <a href={publicSettings.agreementFile_ps} target="_blank" className="flex items-center gap-2 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all text-xs border border-white/5">
+                                                    <FiDownload className="text-gray-400" /> {t('dashboard.pashto')} Template
+                                                </a>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
                                 <p className="text-xs text-gray-400 text-center mt-3">
                                     {t('contract.created_on')} {new Date(contract.createdAt).toLocaleDateString()}
                                 </p>

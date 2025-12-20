@@ -19,6 +19,7 @@ export async function GET() {
             'socialTiktok',
             'companyAddress'
             , 'aboutUs_en', 'aboutUs_fa', 'aboutUs_ps'
+            , 'agreementFile_en', 'agreementFile_fa', 'agreementFile_ps'
         ];
 
         const configs = await Config.find({ key: { $in: publicKeys } });
