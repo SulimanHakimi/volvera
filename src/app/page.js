@@ -15,6 +15,7 @@ export default function HomePage() {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [formStatus, setFormStatus] = useState('');
   const [publicSettings, setPublicSettings] = useState({});
+  const [publicStats, setPublicStats] = useState({ activeCreators: 0, countries: 0, earningsRetained: '99.5%' });
 
   const handleOpenApplyModal = () => {
     const token = localStorage.getItem('accessToken');
@@ -62,7 +63,21 @@ export default function HomePage() {
         console.error('Failed to load public settings', err);
       }
     };
+
+    const fetchPublicStats = async () => {
+      try {
+        const res = await fetch('/api/stats/public');
+        if (res.ok) {
+          const data = await res.json();
+          setPublicStats(data || { activeCreators: 9, countries: 3, earningsRetained: '99.5%' });
+        }
+      } catch (err) {
+        console.error('Failed to load public stats', err);
+      }
+    };
+
     fetchPublicSettings();
+    fetchPublicStats();
   }, []);
 
   const aboutText = (() => {
@@ -165,7 +180,7 @@ export default function HomePage() {
               {t('hero.subtitle')}
             </p>
 
-            <div className="custom-card mb-6 text-left">
+            <div dir={isRtl ? 'rtl' : 'ltr'} className="custom-card mb-6 text-start">
               <div className="flex gap-4 items-center mb-6 justify-center md:justify-start">
                 <div>
                   <div className="font-bold text-lg">{t('hero.you_keep')}</div>
@@ -280,9 +295,9 @@ export default function HomePage() {
         <section className="py-12 border-t border-dashed border-[rgba(255,255,255,0.03)]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { number: '9+', label: t('stats.active_creators') },
-              { number: '99.5%', label: t('stats.earnings_retained') },
-              { number: '3+', label: t('stats.countries') },
+              { number: `${publicStats.activeCreators}`, label: t('stats.active_creators') },
+              { number: publicStats.earningsRetained, label: t('stats.earnings_retained') },
+              { number: `${publicStats.countries}`, label: t('stats.countries') },
             ].map((stat, i) => (
               <motion.div
                 key={i}

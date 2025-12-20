@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
+import { put } from '@vercel/blob';
 import connectDB from '@/lib/mongodb';
 import File from '@/models/File';
 import { verifyToken, extractTokenFromHeader } from '@/utils/jwt';
@@ -26,37 +25,27 @@ export async function POST(request) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-
-        // Ensure upload directory exists
-        const uploadDir = join(process.cwd(), 'public/uploads');
-        try {
-            await mkdir(uploadDir, { recursive: true });
-        } catch (e) {
-            // ignore exists error
-        }
-
-        // Generate unique filename
+        // Generate a unique filename to prevent overwriting
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         const extension = file.name.split('.').pop();
-        const filename = `${file.name.split('.')[0]}-${uniqueSuffix}.${extension}`;
-        const path = join(uploadDir, filename);
+        const blobName = `uploads/${file.name.split('.')[0]}-${uniqueSuffix}.${extension}`;
 
-        // Write file
-        await writeFile(path, buffer);
+        // Upload to Vercel Blob
+        const blob = await put(blobName, file, {
+            access: 'public',
+        });
 
         await connectDB();
 
         // Save file record to DB
         const newFile = new File({
             user: decoded.id,
-            filename: filename,
+            filename: blob.pathname,
             originalName: file.name,
             mimeType: file.type,
             size: file.size,
-            path: `/uploads/${filename}`,
-            category: 'other', // Default, can be updated later
+            path: blob.url,
+            category: 'other',
             status: 'pending',
         });
 
@@ -69,7 +58,7 @@ export async function POST(request) {
 
     } catch (error) {
         console.error('Upload error:', error);
-        return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+        return NextResponse.json({ error: 'Upload failed: ' + error.message }, { status: 500 });
     }
 }
 

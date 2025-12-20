@@ -8,10 +8,31 @@ import { FaFacebookF, FaTwitter, FaLinkedinIn, FaYoutube, FaInstagram, FaHeart, 
 import Image from 'next/image';
 import axios from 'axios';
 
+import { usePathname } from 'next/navigation';
+
 export default function Footer() {
     const { t, i18n } = useTranslation();
+    const pathname = usePathname();
     const currentYear = new Date().getFullYear();
     const [settings, setSettings] = useState({});
+
+    const scrollToSection = (e, sectionId) => {
+        if (pathname === '/' && sectionId.startsWith('#')) {
+            const id = sectionId.substring(1);
+            const element = document.getElementById(id);
+            if (element) {
+                e.preventDefault();
+                const headerHeight = 80;
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+        }
+    };
 
     useEffect(() => {
         const fetchSettings = async () => {
@@ -93,6 +114,7 @@ export default function Footer() {
                                 <li key={i}>
                                     <Link
                                         href={link.href}
+                                        onClick={(e) => scrollToSection(e, link.href)}
                                         className="text-sm text-[#9aa4b2] hover:text-[#06b6d4] transition-colors inline-flex items-center gap-2 group"
                                     >
                                         <FiArrowRight className="w-3 h-3 opacity-0 -ml-5 group-hover:opacity-100 group-hover:ml-0 transition-all" />

@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
+import { del } from '@vercel/blob';
 import connectDB from '@/lib/mongodb';
 import File from '@/models/File';
 import { verifyToken, extractTokenFromHeader } from '@/utils/jwt';
-import { unlink } from 'fs/promises';
-import { join } from 'path';
 
 const authenticateAdmin = (request) => {
     const token = extractTokenFromHeader(request.headers.get('Authorization'));
@@ -33,14 +32,12 @@ export async function PATCH(request, { params }) {
             }
 
             try {
-                // Construct absolute path to file in public folder
-                // file.path stores '/uploads/filename.ext'
-                const filePath = join(process.cwd(), 'public', file.path);
-                await unlink(filePath);
-                console.log(`Deleted physical file: ${filePath}`);
+                // Delete from Vercel Blob using the stored URL
+                await del(file.path);
+                console.log(`Deleted Blob file: ${file.path}`);
             } catch (err) {
-                console.error('Failed to delete physical file (might not exist):', err);
-                // Continue to delete DB record even if file is missing
+                console.error('Failed to delete Blob file:', err);
+                // Continue to delete DB record even if file deletion fails
             }
 
             await File.findByIdAndDelete(id);

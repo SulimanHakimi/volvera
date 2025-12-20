@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server';
+import { put } from '@vercel/blob';
 import connectDB from '@/lib/mongodb';
 import File from '@/models/File';
 import Notification from '@/models/Notification';
 import { verifyToken, extractTokenFromHeader } from '@/utils/jwt';
-import fs from 'fs';
-import path from 'path';
-import os from 'os';
 
 const authenticate = (request) => {
     const token = extractTokenFromHeader(request.headers.get('Authorization'));
@@ -64,14 +62,6 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Invalid category' }, { status: 400 });
         }
 
-        // Allow override with environment variable (e.g., S3, or custom path)
-        // When deploying to environments like Vercel, writing to `public` may not be allowed.
-        // Fallback to OS temp if FILE_UPLOAD_PATH is not configured.
-        const uploadDir = process.env.FILE_UPLOAD_PATH || (process.env.NODE_ENV === 'production' ? path.join(os.tmpdir(), 'uploads', 'documents') : path.join(process.cwd(), 'public', 'uploads', 'documents'));
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-
         const uploadedFiles = [];
 
         for (const file of files) {
@@ -93,68 +83,32 @@ export async function POST(request) {
             }
 
             // Validate file extension
-            const fileExt = path.extname(file.name).toLowerCase();
+            const fileExt = '.' + file.name.split('.').pop().toLowerCase();
             if (!ALLOWED_EXTENSIONS.includes(fileExt)) {
                 return NextResponse.json({
                     error: `File extension ${fileExt} not allowed.`
                 }, { status: 400 });
             }
 
-            // Prevent path traversal attacks
-            const baseName = path.basename(file.name);
-            if (baseName !== file.name || file.name.includes('..') || file.name.includes('/') || file.name.includes('\\')) {
-                return NextResponse.json({ error: 'Invalid filename detected' }, { status: 400 });
-            }
-
-            const buffer = Buffer.from(await file.arrayBuffer());
-
-            // Additional MIME type verification by checking file signature (magic numbers)
-            const fileSignature = buffer.slice(0, 4).toString('hex');
-            const validSignatures = {
-                '25504446': 'pdf',  // PDF
-                'ffd8ffe0': 'jpg',  // JPEG
-                'ffd8ffe1': 'jpg',  // JPEG
-                'ffd8ffe2': 'jpg',  // JPEG
-                '89504e47': 'png',  // PNG
-                'd0cf11e0': 'doc',  // DOC/DOCX
-                '504b0304': 'docx', // DOCX (ZIP-based)
-            };
-
-            const isValidSignature = Object.keys(validSignatures).some(sig =>
-                fileSignature.startsWith(sig)
-            );
-
-            if (!isValidSignature) {
-                return NextResponse.json({
-                    error: `File ${file.name} appears to be corrupted or has an invalid format`
-                }, { status: 400 });
-            }
-
             const timestamp = Date.now();
             const randomStr = Math.random().toString(36).substring(2, 8);
             // Strict filename sanitization
-            const sanitizedName = baseName.replace(/[^a-zA-Z0-9.-]/g, '_').substring(0, 100);
-            const filename = `${decoded.id}_${timestamp}_${randomStr}_${sanitizedName}`;
-            const filePath = path.join(uploadDir, filename);
+            const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').substring(0, 100);
+            const blobName = `documents/${decoded.id}_${timestamp}_${randomStr}_${sanitizedName}`;
 
-            // Ensure the resolved path is within upload directory (prevent path traversal)
-            const resolvedPath = path.resolve(filePath);
-            const resolvedUploadDir = path.resolve(uploadDir);
-            if (!resolvedPath.startsWith(resolvedUploadDir)) {
-                return NextResponse.json({ error: 'Security violation detected' }, { status: 403 });
-            }
-
-            fs.writeFileSync(filePath, buffer, { mode: 0o600 }); // Restrict file permissions
+            // Upload to Vercel Blob
+            const blob = await put(blobName, file, {
+                access: 'public',
+            });
 
             // Save to database
             const fileDoc = await File.create({
                 user: decoded.id || decoded.userId,
-                filename: filename,
+                filename: blob.pathname,
                 originalName: sanitizedName,
                 mimeType: file.type,
                 size: file.size,
-                // If using temp dir in production, serve via temporary route to retrieve
-                path: path.resolve(uploadDir).startsWith(path.resolve(process.cwd())) ? `/uploads/documents/${filename}` : `/api/documents/temp/${filename}`,
+                path: blob.url,
                 category: category,
                 status: 'pending',
             });
@@ -189,6 +143,6 @@ export async function POST(request) {
 
     } catch (error) {
         console.error('Upload Error:', error);
-        return NextResponse.json({ error: 'Failed to upload documents' }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to upload documents: ' + error.message }, { status: 500 });
     }
 }

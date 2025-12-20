@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
+import { put } from '@vercel/blob';
 import connectDB from '@/lib/mongodb';
 import Contract from '@/models/Contract';
 import Notification from '@/models/Notification';
 import { verifyToken, extractTokenFromHeader } from '@/utils/jwt';
-import fs from 'fs';
-import path from 'path';
 
 const authenticate = (request) => {
     const token = extractTokenFromHeader(request.headers.get('Authorization'));
@@ -36,29 +35,26 @@ export async function POST(request, { params }) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const filename = `signed_${id}_${Date.now()}.pdf`;
-        const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'contracts');
+        const blobName = `contracts/signed_${id}_${Date.now()}.pdf`;
 
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
+        // Upload to Vercel Blob
+        const blob = await put(blobName, file, {
+            access: 'public',
+        });
 
-        const filePath = path.join(uploadDir, filename);
-        fs.writeFileSync(filePath, buffer);
-
-        contract.status = 'active'; 
-        contract.signedContractUrl = `/uploads/contracts/${filename}`;
+        contract.status = 'active';
+        contract.signedContractUrl = blob.url;
         await contract.save();
 
         await Notification.create({
-            user: contract.user, 
+            user: contract.user,
             type: 'contract_status',
             title: 'Contract Signed & Active',
             message: 'Your signed contract has been received and verified. Your partnership is now Active!',
             link: '/dashboard',
             relatedContract: contract._id
         });
+
         return NextResponse.json({
             success: true,
             message: 'Contract uploaded and activated successfully',
@@ -67,6 +63,6 @@ export async function POST(request, { params }) {
 
     } catch (error) {
         console.error('Upload Error:', error);
-        return NextResponse.json({ error: 'Failed to upload contract' }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to upload contract: ' + error.message }, { status: 500 });
     }
 }

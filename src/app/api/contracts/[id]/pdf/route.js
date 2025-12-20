@@ -381,33 +381,44 @@ export async function GET(request, { params }) {
         // Company Signature
         if (settings.companySignatureUrl) {
             try {
-                const relativePath = settings.companySignatureUrl.startsWith('/')
-                    ? settings.companySignatureUrl.slice(1)
-                    : settings.companySignatureUrl;
+                let imageBytes;
+                if (settings.companySignatureUrl.startsWith('http')) {
+                    imageBytes = await fetch(settings.companySignatureUrl).then(res => res.arrayBuffer());
+                } else {
+                    // Try to catch local public folder files if still present
+                    const relativePath = settings.companySignatureUrl.startsWith('/')
+                        ? settings.companySignatureUrl.slice(1)
+                        : settings.companySignatureUrl;
 
-                const imagePath = join(process.cwd(), 'public', relativePath);
-
-                const imageBytes = await readFile(imagePath);
-
-                let sigImage;
-                if (settings.companySignatureUrl.toLowerCase().endsWith('.png')) {
-                    sigImage = await pdfDoc.embedPng(imageBytes);
-                } else if (settings.companySignatureUrl.toLowerCase().endsWith('.jpg') || settings.companySignatureUrl.toLowerCase().endsWith('.jpeg')) {
-                    sigImage = await pdfDoc.embedJpg(imageBytes);
+                    // In Vercel environment, we might need an absolute URL to fetch local public files
+                    // but for now let's hope it's either an absolute URL or we can skip it if it fails
+                    // If it's a local path during dev, we might still want to try readFile but let's prioritize URLs
+                    const imagePath = join(process.cwd(), 'public', relativePath);
+                    imageBytes = await readFile(imagePath);
                 }
 
-                if (sigImage) {
-                    const sigDims = sigImage.scale(0.25);
-                    const lineLength = 200;
-                    const centeredX = leftX + (lineLength - sigDims.width) / 2;
-                    const overlappingY = sigY - 10;
+                if (imageBytes) {
+                    let sigImage;
+                    const urlLower = settings.companySignatureUrl.toLowerCase();
+                    if (urlLower.endsWith('.png')) {
+                        sigImage = await pdfDoc.embedPng(imageBytes);
+                    } else if (urlLower.endsWith('.jpg') || urlLower.endsWith('.jpeg')) {
+                        sigImage = await pdfDoc.embedJpg(imageBytes);
+                    }
 
-                    page.drawImage(sigImage, {
-                        x: centeredX,
-                        y: overlappingY,
-                        width: sigDims.width,
-                        height: sigDims.height,
-                    });
+                    if (sigImage) {
+                        const sigDims = sigImage.scale(0.25);
+                        const lineLength = 200;
+                        const centeredX = leftX + (lineLength - sigDims.width) / 2;
+                        const overlappingY = sigY - 10;
+
+                        page.drawImage(sigImage, {
+                            x: centeredX,
+                            y: overlappingY,
+                            width: sigDims.width,
+                            height: sigDims.height,
+                        });
+                    }
                 }
             } catch (err) {
                 console.error('Failed to embed company signature:', err.message);

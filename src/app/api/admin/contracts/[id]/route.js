@@ -72,10 +72,22 @@ export async function DELETE(request, { params }) {
         const { id } = await params;
         await connectDB();
 
-        const contract = await Contract.findByIdAndDelete(id);
+        const contract = await Contract.findById(id);
         if (!contract) {
             return NextResponse.json({ error: 'Contract not found' }, { status: 404 });
         }
+
+        // Delete signed contract from Vercel Blob if it exists
+        if (contract.signedContractUrl && contract.signedContractUrl.startsWith('http')) {
+            try {
+                const { del } = await import('@vercel/blob');
+                await del(contract.signedContractUrl);
+            } catch (err) {
+                console.error('Failed to delete signed contract from Blob:', err);
+            }
+        }
+
+        await Contract.findByIdAndDelete(id);
 
         return NextResponse.json({ message: 'Contract deleted' });
     } catch (error) {

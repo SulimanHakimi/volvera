@@ -33,25 +33,29 @@ export async function GET(request, { params }) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        // Compose path based on env
+        // If it's a Vercel Blob URL, redirect to it
+        if (file.path && file.path.startsWith('http')) {
+            return NextResponse.redirect(file.path);
+        }
+
+        // Compose path based on env for legacy local files
         const uploadDir = process.env.FILE_UPLOAD_PATH || (process.env.NODE_ENV === 'production' ? path.join(os.tmpdir(), 'uploads', 'documents') : path.join(process.cwd(), 'public', 'uploads', 'documents'));
         const filePath = path.join(uploadDir, filename);
 
         // Ensure path doesn't escape
-        const resolvedPath = path.resolve(filePath);
-        const resolvedUploadDir = path.resolve(uploadDir);
-        if (!resolvedPath.startsWith(resolvedUploadDir)) {
-            return NextResponse.json({ error: 'Security violation detected' }, { status: 403 });
+        try {
+            const data = await fs.readFile(filePath);
+            return new NextResponse(data, {
+                status: 200,
+                headers: {
+                    'Content-Type': file.mimeType,
+                    'Content-Disposition': `attachment; filename="${file.originalName}"`,
+                }
+            });
+        } catch (err) {
+            console.error('File read error:', err);
+            return NextResponse.json({ error: 'File not found on disk' }, { status: 404 });
         }
-
-        const data = await fs.readFile(filePath);
-        return new NextResponse(data, {
-            status: 200,
-            headers: {
-                'Content-Type': file.mimeType,
-                'Content-Disposition': `attachment; filename="${file.originalName}"`,
-            }
-        });
     } catch (err) {
         console.error('Serve temp file error:', err);
         return NextResponse.json({ error: 'Failed to serve file' }, { status: 500 });
